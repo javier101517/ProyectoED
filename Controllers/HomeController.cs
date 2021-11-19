@@ -39,7 +39,8 @@ namespace WebApplication1.Controllers
 
             if (usuario == "" || password == "")
             {
-                TempData["Notificar"] = "Usuario o contraseña incorrectos";
+                TempData["texto"] = "Usuario o contraseña incorrectos";
+                TempData["color"] = "error";
                 return RedirectToAction("Index");
             }
 
@@ -52,8 +53,8 @@ namespace WebApplication1.Controllers
             }
             else
             {
-                ViewData["texto"] = "Usuario o contraseña incorrectos";
-                ViewData["Color"] = "alert alert-danger";
+                TempData["texto"] = "Usuario o contraseña incorrectos";
+                TempData["color"] = "error";
                 return RedirectToAction("Index");
             }
         }
@@ -73,16 +74,19 @@ namespace WebApplication1.Controllers
             if (usuario == "")
             {
                 TempData["Notificar"] = "Debe ingresar un usuario";
+                TempData["color"] = "error";
                 return RedirectToAction("Registrarse");
             }
             if (password != password2)
             {
                 TempData["Notificar"] = "Contraseñas diferentes";
+                TempData["color"] = "error";
                 return RedirectToAction("Registrarse");
             }
             if (email == "")
             {
                 TempData["Notificar"] = "Debe ingresar un correo";
+                TempData["color"] = "error";
                 return RedirectToAction("Registrarse");
             }
 

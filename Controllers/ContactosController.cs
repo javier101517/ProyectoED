@@ -31,20 +31,20 @@ namespace WebApplication1.Controllers
                 Mongo mongo = new Mongo();
                 if (mongo.EliminarContacto(usuarios[0], usuarios[1]))
                 {
-                    ViewData["texto"] = "Usuario eliminado correctamente";
-                    ViewData["Color"] = "alert alert-success";
+                    TempData["texto"] = "Usuario eliminado correctamente";
+                    TempData["color"] = "success";
                 }
                 else
                 {
-                    ViewData["texto"] = "Error al eliminar el usuario, intente mas tarde.";
-                    ViewData["Color"] = "alert alert-danger";
+                    TempData["texto"] = "Error al eliminar el usuario, intente mas tarde.";
+                    TempData["color"] = "error";
                 }
                 return RedirectToAction("Index", new { id = usuarios[0] });
             }
             catch
             {
-                ViewData["texto"] = "Error al eliminar el usuario, intente mas tarde.";
-                ViewData["Color"] = "alert alert-danger";
+                TempData["texto"] = "Error al eliminar el usuario, intente mas tarde.";
+                TempData["color"] = "error";
                 return View();
             }
         }

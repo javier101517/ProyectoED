@@ -24,14 +24,12 @@
             <button type="submit" class="btn btn-primary">Ingresar</button>
             @Html.ActionLink("Resgistrarse", "Registrarse", "Home", null, new { @class = "btn btn-link" })
         </div>
-
-        @*<div>
-            var test = @ViewData["texto"].ToString() as string;
-            if (test != null)
-            {
-            @Html.Label("notificar", ViewData["texto"].ToString(), new { @class = ViewData["color"].ToString() })
-            }
-        </div>*@
     }
-
 </div>
+
+@if (TempData["texto"] != null)
+{
+    <script>
+            alertify.notify('@TempData["texto"].ToString()', '@TempData["color"].ToString()', 5);
+    </script>
+}

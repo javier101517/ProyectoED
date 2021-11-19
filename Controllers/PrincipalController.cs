@@ -42,11 +42,11 @@ namespace WebApplication1.Controllers
             if (respuestaActualizar)
             {
                 mongo.EliminarSolicitud(usuario, invitado);
-                return Ok();
+                return Json(true);
             }
             else
             {
-                return BadRequest();
+                return Json(false);
             }
         }
 
@@ -55,7 +55,7 @@ namespace WebApplication1.Controllers
             Mongo mongo = new Mongo();
 
             mongo.EliminarSolicitud(usuario, invitado);
-            return Ok();
+            return Json("false");
         }
     
         public IActionResult Chat(string id)

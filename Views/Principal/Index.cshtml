@@ -7,7 +7,9 @@
                 Bienvenido @Model.Usuario.Nombre
             </h1>
         </div>
+        @*Menu*@
         <div class="d-flex">
+            @*Notificaciones*@
             <div>
                 <button type="button" class="btn position-relative ml-2" data-toggle="modal" data-target="#VerSolicitudes">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
@@ -21,6 +23,7 @@
                     }
                 </button>
             </div>
+            @*Agregar Usuario*@
             <div>
                 <button type="button" class="btn ml-2" data-toggle="modal" data-target="#exampleModal">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
@@ -29,7 +32,7 @@
                     </svg>
                 </button>
             </div>
-
+            @*Contactos*@
             <div>
                 <a class="btn text-decoration-none" asp-controller="Contactos" asp-action="Index" asp-route-id="@Model.Usuario.Correo">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
@@ -37,19 +40,20 @@
                     </svg>
                 </a>
             </div>
+            @*Logout*@
+            <div>
+                <a class="btn text-decoration-none" asp-controller="Home" asp-action="Index">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                    </svg>
+                </a>
+            </div>
         </div>
     </div>
 
-    @*<div>
-        <div>
-            var test = @ViewData["texto"].ToString() as string;
-            if (test != null)
-            {
-            @Html.Label("notificar", ViewData["texto"].ToString(), new { @class = ViewData["color"].ToString() })
-            }
-        </div>
-    </div>*@
 
+    @*Listado de chats*@
     <div class="listado">
         @if (Model.Historial != null)
         {
@@ -58,18 +62,18 @@
                 {
                     @*<a asp-controller="Principal" asp-action="Chat" asp-route-id="@item.Envia, @item.Recibe" class="text-decoration-none">*@
                     <a asp-controller="Principal" asp-action="Chat" asp-route-id="@item.Id" class="text-decoration-none">
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">
-                                    @item.Recibe
-                                </div>
-                                ultimo mensaje
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">
+                                @item.Recibe
                             </div>
-                            @if (int.Parse(item.MensajesNuevosEnvia) > 0)
-                            {
-                                <span class="badge bg-primary rounded-pill">@item.MensajesNuevosEnvia</span>
-                            }
-                        </li>
+                            ultimo mensaje
+                        </div>
+                        @if (int.Parse(item.MensajesNuevosEnvia) > 0)
+                        {
+                            <span class="badge bg-primary rounded-pill">@item.MensajesNuevosEnvia</span>
+                        }
+                    </li>
                     </a>
                 }
             </ol>
@@ -112,7 +116,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Agregar usuario</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" id="cerrarSolicitud" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -157,3 +161,73 @@
         </div>
     </div>
 </div>
+
+@if (TempData["texto"] != null)
+{
+
+    <script>
+            alertify.notify('@TempData["texto"].ToString()', '@TempData["color"].ToString()', 5);
+    </script>
+}
+
+<script>
+    function aceptarSolicitud(usuario, invitacion) {
+    $.ajax({
+        type: 'GET',
+        url: '@Url.Action("AceptarSolicitud","Principal")',
+        dataType: 'json',
+        data: {
+            usuario: usuario,
+            invitado: invitacion
+        },
+        success: function (respuesta) {
+            if (respuesta) {
+                alert("Solicitud aceptada");
+            } else {
+                alert("Error al actualizar")
+            }
+            actualizarPagina();
+        },
+        error: function (ex) {
+            if (respuesta) {
+                alert("Solicitud aceptada");
+            } else {
+                alert("Error al actualizar")
+            }
+            actualizarPagina();
+        }
+    })
+}
+
+function rechazarSolicitud(usuario, invitacion) {
+    $.ajax({
+        type: 'GET',
+        url: '@Url.Action("RechazarSolicitud","Principal")',
+        dataType: 'json',
+        data: {
+            usuario: usuario,
+            invitado: invitacion
+        },
+        success: function (respuesta) {
+            if (!respuesta) {
+                alert("Solicitud rechazada");
+            } else {
+                alert("Error al actualizar")
+            }
+        },
+        error: function (ex) {
+            alert("Error al actualizar");
+        }
+    })
+}
+
+function actualizarPagina() {
+    console.log("adentro");
+    setTimeout(function () {
+        location.reload();
+    }, 2000);
+}
+
+
+
+</script>
