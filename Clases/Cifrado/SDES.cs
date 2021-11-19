@@ -8,7 +8,7 @@ using Cifrado.Interfaces;
 
 namespace Cifrado.Clases
 {
-    public class SDES : ICifrado
+    public class SDES
     {
         private string llaveSecreta { get; set; }
 
@@ -261,6 +261,21 @@ namespace Cifrado.Clases
             return Convert.ToByte(arreglo, 2);
         }
 
+        public char[] CifrarArreglo(char[] lstContenido)
+        {
+            char[] lstCifrado = new char[lstContenido.Length];
+            int cont = 0;
+
+            foreach (var caracter in lstContenido)
+            {
+                byte ascii = CifrarASCII(caracter);
+                lstContenido[cont] = Convert.ToChar(ascii);
+                cont++;
+            }
+
+            return lstCifrado;
+        }
+
         public List<byte> Cifrar()
         {
             List<byte> listaByteCifrar = new List<byte>();
@@ -342,6 +357,21 @@ namespace Cifrado.Clases
             arreglo = IP_1(arreglo);
 
             return Convert.ToByte(arreglo, 2);
+        }
+
+        public char[] DescifrarArreglo(char[] lstContCifrado)
+        {
+            char[] lstOriginal = new char[lstContCifrado.Length];
+            int cont = 0;
+
+            foreach (var caracter in lstContCifrado)
+            {
+                byte ascii = DescifrarASCII(caracter);
+                lstOriginal[cont] = Convert.ToChar(ascii);
+                cont++;
+            }
+
+            return lstOriginal;
         }
 
         public List<byte> Descifrar()
