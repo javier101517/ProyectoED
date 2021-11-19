@@ -34,7 +34,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Login(IFormCollection collection)
         {
-            string usuario = collection["usuario"];
+            string usuario = collection["usuarioLogueado"];
             string password = collection["password"];
 
             if (usuario == "" || password == "")
@@ -45,11 +45,11 @@ namespace WebApplication1.Controllers
             }
 
             Mongo mongo = new Mongo();
-            Usuario Usuario = mongo.Login(usuario, password);
-            if (Usuario != null)
+            Usuario UsuarioLogueado = mongo.Login(usuario, password);
+            if (UsuarioLogueado != null)
             {
 
-                return RedirectToAction("Index", "Principal", new { correo = Usuario.Correo });
+                return RedirectToAction("Index", "Principal", new { usuarioLogueado = UsuarioLogueado.Correo });
             }
             else
             {

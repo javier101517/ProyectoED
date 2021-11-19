@@ -15,13 +15,13 @@ namespace WebApplication1.Controllers
     public class PrincipalController : Controller
     {
         // GET: PrincipalController
-        public IActionResult Index(string correo)
+        public IActionResult Index(string usuarioLogueado)
         {
             Mongo mongo = new Mongo();
             RespuestaPantallaPrincipal respuesta = new RespuestaPantallaPrincipal();
-            respuesta.Usuario = mongo.GetUsuario(correo);
-            respuesta.Historial = mongo.GetChats(correo);
-            TempData["usuario"] = correo;
+            respuesta.UsuarioLogueado = mongo.GetUsuario(usuarioLogueado);
+            respuesta.Historial = mongo.GetChats(usuarioLogueado);
+            TempData["usuario"] = usuarioLogueado;
             return View(respuesta);
         }
 
