@@ -64,11 +64,23 @@ namespace WebApplication1.Controllers
             return Json("false");
         }
     
-        public IActionResult Chat(string id, string usuario)
+        public IActionResult Chat(string id, string usuarioLogueado)
         {
             Mongo mongo = new Mongo();
             Chats chat = mongo.GetChat(id);
-            TempData["usuario"] = usuario;
+
+            if (chat.Usuario1 == usuarioLogueado)
+            {
+                chat.MensajesNuevosUsuario1 = "0";
+            }
+            else
+            {
+                chat.MensajesNuevosUsuario2 = "0";
+            }
+
+            mongo.ActualizarConversacion(chat);
+
+            TempData["usuario"] = usuarioLogueado;
             return View(chat);
         }
 
@@ -84,6 +96,7 @@ namespace WebApplication1.Controllers
             
             if (chat != null)
             {
+                TempData["usuario"] = UsuarioEnvia;
                 return View("Chat", chat);
             }
             else

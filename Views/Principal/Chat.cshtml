@@ -12,20 +12,22 @@
     <div class="position-relative" style="height: 580px; overflow-y: scroll">
 
         <ul class="list-group mb-2 h-75">
-            @foreach (var item in Model.Historial)
+            @if (Model != null)
             {
-
-                if (Model.Envia == item.Usuario)
+                @foreach (var item in Model.Historial)
                 {
-                    <li class="list-group-item list-group-item-success mb-1">
-                        @item.Mensaje
-                    </li>
-                }
-                else
-                {
-                    <li class="list-group-item list-group-item-secondary mb-1">
-                        @item.Mensaje
-                    </li>
+                    if (Model.Usuario1 == item.Usuario)
+                    {
+                        <li class="list-group-item list-group-item-success mb-1">
+                            @item.Mensaje
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item list-group-item-secondary mb-1">
+                            @item.Mensaje
+                        </li>
+                    }
                 }
             }
         </ul>
@@ -36,7 +38,7 @@
         @Html.AntiForgeryToken();
         <div class="mb-3 mt-2 row " style="position:sticky; bottom: 50px;">
             <div class="col-sm-10">
-                <input type="text" value="@Model.Envia" name="envia" hidden />
+                <input type="text" value="@Model.Usuario1" name="envia" hidden />
                 <input type="text" value="@Model.Id" name="conversacionId" hidden />
                 <input type="text" class="form-control" id="mensjae" name="mensaje">
             </div>
@@ -74,7 +76,7 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <input type="text" value="@Model.Envia" name="envia" hidden />
+                        <input type="text" value="@Model.Usuario1" name="envia" hidden />
                         <input type="text" value="@Model.Id" name="conversacionId" hidden />
                     </div>
                     <div class="input-group mb-3">

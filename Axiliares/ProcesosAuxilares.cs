@@ -8,7 +8,7 @@ namespace WebApplication1.Axiliares
 {
     public class ProcesosAuxilares
     {
-        public Chats ActualizarMenajse(string UsarioEnvia, string Mensaje, string ConversacionId)
+        public Chats ActualizarMenajse(string UsuarioEnvia, string Mensaje, string ConversacionId)
         {
             try
             {
@@ -16,16 +16,27 @@ namespace WebApplication1.Axiliares
                 Conversacion nuevoMensaje = new Conversacion();
                 nuevoMensaje.Fecha = fecha.ToString();
                 nuevoMensaje.Mensaje = Mensaje;
-                nuevoMensaje.Usuario = UsarioEnvia;
+                nuevoMensaje.Usuario = UsuarioEnvia;
 
                 Mongo mongo = new Mongo();
                 Chats chat = mongo.GetChat(ConversacionId);
                 List<Conversacion> historial = new List<Conversacion>(chat.Historial);
                 historial.Add(nuevoMensaje);
 
-                int mensajesNuevosRecibe = int.Parse(chat.MensajesNuevosRecibe);
-                mensajesNuevosRecibe++;
-                chat.MensajesNuevosRecibe = mensajesNuevosRecibe.ToString();
+                if (chat.Usuario1 == UsuarioEnvia)
+                {
+                    //guardar en usuario 2 
+                    int mensajesNuevosRecibe = int.Parse(chat.MensajesNuevosUsuario2);
+                    mensajesNuevosRecibe++;
+                    chat.MensajesNuevosUsuario2 = mensajesNuevosRecibe.ToString();
+                }
+                else
+                {
+                    //guardar en usuario 1
+                    int mensajesNuevosRecibe = int.Parse(chat.MensajesNuevosUsuario1);
+                    mensajesNuevosRecibe++;
+                    chat.MensajesNuevosUsuario1 = mensajesNuevosRecibe.ToString();
+                }
                 chat.Historial = historial.ToArray();
                 mongo.ActualizarConversacion(chat);
                 return chat;
