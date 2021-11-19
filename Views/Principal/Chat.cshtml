@@ -1,8 +1,8 @@
 ﻿@model WebApplication1.Models.Chats
 
-<div class="container"> 
+<div class="container">
     <div class="mt-2 mb-2">
-        <a asp-controller="Principal" asp-action="Index" class="text-decoration-none">
+        <a asp-controller="Principal" asp-action="Index" asp-route-correo="@TempData["usuario"].ToString()" class="text-decoration-none">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
             </svg>
@@ -14,7 +14,7 @@
         <ul class="list-group mb-2 h-75">
             @foreach (var item in Model.Historial)
             {
-            
+
                 if (Model.Envia == item.Usuario)
                 {
                     <li class="list-group-item list-group-item-success mb-1">
@@ -35,12 +35,21 @@
     {
         @Html.AntiForgeryToken();
         <div class="mb-3 mt-2 row " style="position:sticky; bottom: 50px;">
-            <div class="col-sm-11">
-                <input type="text" value="@Model.Envia" name="envia" hidden/>
-                <input type="text" value="@Model.Id" name="conversacionId" hidden/>
+            <div class="col-sm-10">
+                <input type="text" value="@Model.Envia" name="envia" hidden />
+                <input type="text" value="@Model.Id" name="conversacionId" hidden />
                 <input type="text" class="form-control" id="mensjae" name="mensaje">
             </div>
-            <div class="col-sm-1" >
+
+            <div class="col-sm-1">
+                <button type="button" class="btn ml-2" data-toggle="modal" data-target="#adjunto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
+                        <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="col-sm-1">
                 <button type="submit" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                         <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
@@ -50,3 +59,46 @@
         </div>
     }
 </div>
+
+<div class="modal fade" id="adjunto" tabindex="-1" role="dialog" aria-labelledby="adjunto" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("AgregarArchivos", "Principal", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken();
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Adjuntar archivo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="text" value="@Model.Envia" name="envia" hidden />
+                        <input type="text" value="@Model.Id" name="conversacionId" hidden />
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Upload</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="adjunto" id="inputGroupFile01">
+                            <label class="custom-file-label" for="inputGroupFile01">Seleccione el archivo</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (TempData["texto"] != null)
+{
+    <script>
+            alertify.notify('@TempData["texto"].ToString()', '@TempData["color"].ToString()', 5);
+    </script>
+}
