@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Cifrado.Clases;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -134,23 +135,27 @@ namespace WebApplication1.Controllers
 
         public IActionResult AgregarArchivos(IFormFile adjunto, string envia, string conversacionId)
         {
-            var result = new StringBuilder();
-            using (var stream = new MemoryStream())
-            {
-                using (var reader = new StreamReader(adjunto.OpenReadStream()))
-                {
-                    while (reader.Peek() >= 0)
-                        result.AppendLine(reader.ReadLine());
-                }
-            }
+            //var result = new StringBuilder();
+            //using (var stream = new MemoryStream())
+            //{
+            //    using (var reader = new StreamReader(adjunto.OpenReadStream()))
+            //    {
+            //        while (reader.Peek() >= 0)
+            //            result.AppendLine(reader.ReadLine());
+            //    }
+            //}
 
-            char[] letras = result.ToString().ToCharArray();
+            //char[] listado = result.ToString().ToCharArray();
 
-            LZWAuxiliar lzw = new LZWAuxiliar();
-            RespuestaLZW respuesta = lzw.Compresion(letras);
-            ProcesosAuxilares procesos = new ProcesosAuxilares();
+            //LZWAuxiliar lzw = new LZWAuxiliar();
+            //RespuestaLZW respuesta = lzw.Compresion(letras);
+            //ProcesosAuxilares procesos = new ProcesosAuxilares();
 
-            string diccionarioExtendido = respuesta.DiccionarioExtendido.ToArray().ToString();
+            //string diccionarioExtendido = respuesta.DiccionarioExtendido.ToArray().ToString();
+
+
+            //SDES sdes = new SDES();
+            //List<byte> listado = sdes.Cifrar(listado);
 
             //procesos.ActualizarMenajse(envia, respuesta, conversacionId);
 

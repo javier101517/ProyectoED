@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using Cifrado.Interfaces;
 
 namespace Cifrado.Clases
 {
-    public class SDES : ICifrado
+    public class SDES
     {
+        public string FileName { get; set; }
+
+        public string PathFileCipher { get; set; }
         private string llaveSecreta { get; set; }
 
         private string K1 { get; set; }
