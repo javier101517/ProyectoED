@@ -5,13 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace Cifrado.Clases
+namespace WebApplication1.Clases.Cifrado
 {
     public class SDES
     {
-        public string FileName { get; set; }
-
-        public string PathFileCipher { get; set; }
         private string llaveSecreta { get; set; }
 
         private string K1 { get; set; }
@@ -265,6 +262,8 @@ namespace Cifrado.Clases
 
         public char[] CifrarArreglo(char[] lstContenido)
         {
+            ObtenerLlave("1001110001");
+
             char[] lstCifrado = new char[lstContenido.Length];
             int cont = 0;
 
@@ -363,6 +362,8 @@ namespace Cifrado.Clases
 
         public char[] DescifrarArreglo(char[] lstContCifrado)
         {
+            ObtenerLlave("1001110001");
+
             char[] lstOriginal = new char[lstContCifrado.Length];
             int cont = 0;
 

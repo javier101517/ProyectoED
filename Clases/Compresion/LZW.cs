@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
-namespace WebApplication1.Clases
+namespace WebApplication1.Clases.Compresion
 {
     public class LZW
     {
