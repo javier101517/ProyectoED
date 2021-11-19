@@ -34,17 +34,17 @@ namespace WebApplication1.Controllers
 
         public IActionResult Login(IFormCollection collection)
         {
-            //string usuario = collection["usuario"];
-            //string password = collection["password"];
+            string usuario = collection["usuario"];
+            string password = collection["password"];
 
-            //if (usuario == "" || password == "")
-            //{
-            //    TempData["Notificar"] = "Usuario o contraseña incorrectos";
-            //    return RedirectToAction("Index");
-            //}
+            if (usuario == "" || password == "")
+            {
+                TempData["Notificar"] = "Usuario o contraseña incorrectos";
+                return RedirectToAction("Index");
+            }
 
             Mongo mongo = new Mongo();
-            Usuario respuesta = mongo.Login("javier@javier.com", "1234");
+            Usuario respuesta = mongo.Login(usuario, password);
             if (respuesta != null)
             {
 
