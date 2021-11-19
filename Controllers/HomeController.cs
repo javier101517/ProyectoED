@@ -44,11 +44,11 @@ namespace WebApplication1.Controllers
             }
 
             Mongo mongo = new Mongo();
-            Usuario respuesta = mongo.Login(usuario, password);
-            if (respuesta != null)
+            Usuario Usuario = mongo.Login(usuario, password);
+            if (Usuario != null)
             {
 
-                return RedirectToAction("Index", "Principal", respuesta);
+                return RedirectToAction("Index", "Principal", new { correo = Usuario.Correo });
             }
             else
             {
@@ -92,7 +92,7 @@ namespace WebApplication1.Controllers
             Mongo mongo = new();
             mongo.InsertarUsuario("Usuarios", email, respuesta, usuario);
 
-            return RedirectToAction("Index", "Principal");
+            return RedirectToAction("Index");
         }
     }
 

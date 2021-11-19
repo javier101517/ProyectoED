@@ -55,11 +55,11 @@ namespace WebApplication1.Models
 
             var document = new BsonDocument
             {
-                { "Contactos", new BsonDocument{ } },
+                { "Contactos", new BsonArray{ } },
                 { "Correo", Email },
-                { "Grupos", new BsonDocument{ } },
+                { "Grupos", new BsonArray{ } },
                 { "Password", Password },
-                { "Solicitudes", 0 },
+                { "Solicitudes", new BsonArray{ } },
                 { "Nombre", Usuario}
             };
 
