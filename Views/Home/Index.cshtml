@@ -25,15 +25,13 @@
             @Html.ActionLink("Resgistrarse", "Registrarse", "Home", null, new { @class = "btn btn-link" })
         </div>
 
-        <div>
-            @{
-                var test = TempData["Notificar"];
-                if (test != null)
-                {
-                    @Html.Label("notificar", TempData["Notificar"].ToString(), new { @class = "alert alert-danger " })
-                }
+        @*<div>
+            var test = @ViewData["texto"].ToString() as string;
+            if (test != null)
+            {
+            @Html.Label("notificar", ViewData["texto"].ToString(), new { @class = ViewData["color"].ToString() })
             }
-        </div>
+        </div>*@
     }
 
 </div>

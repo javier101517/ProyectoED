@@ -1,0 +1,52 @@
+﻿@model WebApplication1.Models.Chats
+
+<div class="container"> 
+    <div class="mt-2 mb-2">
+        <a asp-controller="Principal" asp-action="Index" class="text-decoration-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+            </svg>
+        </a>
+    </div>
+
+    <div class="position-relative" style="height: 580px; overflow-y: scroll">
+
+        <ul class="list-group mb-2 h-75">
+            @foreach (var item in Model.Historial)
+            {
+            
+                if (Model.Envia == item.Usuario)
+                {
+                    <li class="list-group-item list-group-item-success mb-1">
+                        @item.Mensaje
+                    </li>
+                }
+                else
+                {
+                    <li class="list-group-item list-group-item-secondary mb-1">
+                        @item.Mensaje
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+
+    @using (Html.BeginForm("AgregarMensaje", "Principal", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken();
+        <div class="mb-3 mt-2 row " style="position:sticky; bottom: 50px;">
+            <div class="col-sm-11">
+                <input type="text" value="@Model.Envia" name="envia" hidden/>
+                <input type="text" value="@Model.Id" name="conversacionId" hidden/>
+                <input type="text" class="form-control" id="mensjae" name="mensaje">
+            </div>
+            <div class="col-sm-1" >
+                <button type="submit" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    }
+</div>

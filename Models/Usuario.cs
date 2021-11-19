@@ -18,8 +18,8 @@ namespace WebApplication1.Models
         public string Correo { get; set; }
         public string Password { get; set; }
         public string[] Contactos { get; set; }
-        public Object Grupos { get; set; }
         public string[] Solicitudes { get; set; }
+        public Object Grupos { get; set; }
     }
         
 }

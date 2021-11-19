@@ -16,27 +16,42 @@ namespace WebApplication1.Controllers
         public ActionResult AgregarUsuario(IFormCollection collection)
         {
             string correoAgregar = collection["correo"];
-            string id = collection["id"];
+            string miCorreo = collection["id"];
 
             Mongo mongo = new Mongo();
-            Usuario miUsuario = mongo.GetUsuario(id);
+            Usuario miUsuario = mongo.GetUsuario(miCorreo);
 
             List<string> contactos = new List<string>(miUsuario.Contactos);
             if (contactos.Contains(correoAgregar))
             {
 
-                //si existe, regresarle un mensaje que ya existe
+                TempData["Notificar"] = "Usuario ya se encuentra agregado en los contactos.";
+                return RedirectToAction("Index", "Principal", miUsuario);
             }
             else
             {
-                Usuario usuarioInv = mongo.GetUsuario(id);
-                List<string> contactosInv = new List<string>(usuarioInv.Solicitudes);
-                contactosInv.Add(id);
-                mongo.ActualizarSolicitudes(correoAgregar, contactosInv.ToArray());
+                Usuario usuarioAgregar = mongo.GetUsuario(correoAgregar);
+                if (usuarioAgregar == null)
+                {
+                    TempData["Notificar"] = "Usuario no existe, por favor verifique.";
+                    return RedirectToAction("Index", "Principal", miUsuario);
+                }
+                
+                List<string> usuarioAgregarSolicitudes = new List<string>(usuarioAgregar.Solicitudes);
+                if (usuarioAgregarSolicitudes.Contains(miCorreo))
+                {
+                    TempData["Notificar"] = "Invitación ya fue enviada.";
+                    return RedirectToAction("Index", "Principal", miUsuario);
+                }
+
+                usuarioAgregarSolicitudes.Add(miCorreo);
+                mongo.ActualizarSolicitudes(correoAgregar, usuarioAgregarSolicitudes.ToArray());
+                
+                TempData["Notificar"] = "Invitación enviada.";
+                return RedirectToAction("Index", "Principal", miUsuario);
             }
 
-            //si no existe agregarlo a notificaciones
-            return View();
+            
         }
 
 

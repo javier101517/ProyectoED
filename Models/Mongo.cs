@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using WebApplication1.Axiliares;
 
@@ -16,11 +17,42 @@ namespace WebApplication1.Models
             return cliente;
         }
 
+        public Usuario Login(string Usuario, string Password)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Usuario>("Usuarios");
+            var filtro = Builders<Usuario>.Filter.Eq("Correo", Usuario);
+            Usuario usuarioRespuesta = coleccion.Find(filtro).FirstOrDefault();
+
+            Base64 base64 = new();
+            string pass = base64.Encriptar(Password);
+
+            if (usuarioRespuesta == null)
+            {
+                return null;
+            }
+            if (usuarioRespuesta.Correo == Usuario)
+            {
+                if (usuarioRespuesta.Password == pass)
+                {
+                    return usuarioRespuesta;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public void InsertarUsuario(string Tabla, string Email, string Password, string Usuario)
         {
             var database = Conexion().GetDatabase("ProyectoED");
             var collection = database.GetCollection<BsonDocument>(Tabla);
-            
+
             var document = new BsonDocument
             {
                 { "Contactos", new BsonDocument{ } },
@@ -34,37 +66,24 @@ namespace WebApplication1.Models
             collection.InsertOne(document);
         }
 
-        public Usuario GetUsuario(string Usuario, string Password)
+        
+        public void CrearChat(string UsuarioEnvia, string UsuarioRecibe) 
         {
             var database = Conexion().GetDatabase("ProyectoED");
-            var coleccion = database.GetCollection<Usuario>("Usuarios");
-            var filtro = Builders<Usuario>.Filter.Eq("Correo", Usuario);
-            var respuesta = coleccion.Find(filtro).FirstOrDefault();
+            var collection = database.GetCollection<BsonDocument>("Chats");
 
-            Base64 base64 = new();
-            string pass = base64.Encriptar(Password);
-
-            if (respuesta == null)
+            var document = new BsonDocument
             {
-                return null;
-            }
-            if (respuesta.Correo == Usuario)
-            {
-                if (respuesta.Password == pass)
-                {
-                    return respuesta;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
+                { "Envia", UsuarioEnvia },
+                { "Historial", new BsonArray() },
+                { "NuevosChats", "0" },
+                { "Recibe", UsuarioRecibe },
+                { "MensajesNuevosRecibe", "0" },
+                { "MensajesNuevosEnvia", "0"}
+            };
+            
+            collection.InsertOne(document);
         }
-
         public Usuario GetUsuario(string correo)
         {
             var database = Conexion().GetDatabase("ProyectoED");
@@ -80,6 +99,37 @@ namespace WebApplication1.Models
             {
                 return respuesta;
             }
+        }
+
+        public List<Chats> GetChats(string usuario)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Chats>("Chats");
+            //var filtro = Builders<Chats>.Filter.Eq("Envia", usuario) & Builders<Chats>.Filter.Eq("Recibe", usuario);
+            var filtro = Builders<Chats>.Filter.Eq("Envia", usuario);
+            var respuesta = coleccion.Find(filtro).ToList();
+
+            return respuesta;
+        }
+
+        public Chats GetChat(string id)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Chats>("Chats");
+            var filtro = Builders<Chats>.Filter.Eq("Id", id);
+            var respuesta = coleccion.Find(filtro).FirstOrDefault();
+
+            return respuesta;
+        }
+
+        public Chats GetChat(string usuarioEnvia, string usuarioRecibe)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Chats>("Chats");
+            var filtro = Builders<Chats>.Filter.Eq("Envia", usuarioEnvia) & Builders<Chats>.Filter.Eq("Recibe", usuarioRecibe);
+            var respuesta = coleccion.Find(filtro).FirstOrDefault();
+
+            return respuesta;
         }
 
         public bool ActualizarContactos(string usuario, string[] arreglo) {
@@ -105,6 +155,29 @@ namespace WebApplication1.Models
             return respuesta.IsModifiedCountAvailable;
         }
 
+        public bool ActualizarConversacion(Chats chat)
+        {
+            try
+            {
+                var database = Conexion().GetDatabase("ProyectoED");
+                var coleccion = database.GetCollection<Chats>("Chats");
+
+                var filtro = Builders<Chats>.Filter.Eq("Id", chat.Id);
+                var update = Builders<Chats>.Update.Set("MensajesNuevosRecibe", chat.MensajesNuevosRecibe).Set("Historial", chat.Historial);
+                var respuesta = coleccion.UpdateOne(filtro, update);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                var test = e.Message;
+                throw;
+            }
+
+            //cuando actualice se puede agregar un icono de enviado
+
+        }
+
         public bool EliminarSolicitud(string usuario, string solicitud)
         {
             Usuario respuesta = GetUsuario(usuario);
@@ -119,6 +192,22 @@ namespace WebApplication1.Models
             }
             return ActualizarSolicitudes(usuario, listado.ToArray());
         }
-    
+       
+        public bool EliminarContacto(string usuario, string contacto)
+        {
+            Usuario respuesta = GetUsuario(usuario);
+
+            List<string> listado = new List<string>(respuesta.Contactos);
+            for (int i = 0; i < listado.Count; i++)
+            {
+                if (listado[i] == contacto)
+                {
+                    listado.Remove(contacto);
+                }
+            }
+            return ActualizarContactos(usuario, listado.ToArray());
+
+
+        }
     }
 }
