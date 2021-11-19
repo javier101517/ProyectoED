@@ -106,7 +106,7 @@ namespace WebApplication1.Models
             var database = Conexion().GetDatabase("ProyectoED");
             var coleccion = database.GetCollection<Chats>("Chats");
             //var filtro = Builders<Chats>.Filter.Eq("Envia", usuario) & Builders<Chats>.Filter.Eq("Recibe", usuario);
-            var filtro = Builders<Chats>.Filter.Eq("Envia", usuario);
+            var filtro = Builders<Chats>.Filter.Eq("Envia", usuario) | Builders<Chats>.Filter.Eq("Recibe", usuario);
             var respuesta = coleccion.Find(filtro).ToList();
 
             return respuesta;

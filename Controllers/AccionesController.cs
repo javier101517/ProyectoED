@@ -63,6 +63,23 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index", "Principal", miUsuario);
         }
 
+        public bool AceptarSolicitud(string usuario, string invitado)
+        {
+            Mongo mongo = new Mongo();
+            Usuario respuesta = mongo.GetUsuario(usuario);
+            List<string> arreglo = new List<string>();
 
+            if (respuesta == null)
+            {
+                arreglo.Add(invitado);
+            }
+            else
+            {
+                arreglo = new List<string>(respuesta.Contactos);
+                arreglo.Add(invitado);
+            }
+
+            return mongo.ActualizarContactos(usuario, arreglo.ToArray());
+        }
     }
 }
