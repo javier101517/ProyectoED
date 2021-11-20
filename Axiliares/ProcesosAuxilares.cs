@@ -59,9 +59,10 @@ namespace WebApplication1.Axiliares
             foreach (var item in chatOriginal.Historial)
             {
                 string[] listadoCaracteres = item.Mensaje.Split('~');
-                char[] listadoFinal = new char[listadoCaracteres.Length];
 
-                for (int i = 0; i < listadoCaracteres.Length; i++)
+                char[] listadoFinal = new char[listadoCaracteres.Length-1];
+
+                for (int i = 0; i < listadoCaracteres.Length-1; i++)
                 {
                     if (listadoCaracteres[i] != "")
                     {
