@@ -12,11 +12,10 @@ namespace WebApplication1.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        public string Envia { get; set; }
-        public string Recibe { get; set; }
-        public string NuevosChats { get; set; }
-        public string MensajesNuevosEnvia { get; set; }
-        public string MensajesNuevosRecibe { get; set; }
+        public string Usuario1 { get; set; }
+        public string Usuario2 { get; set; }
+        public string MensajesNuevosUsuario1 { get; set; }
+        public string MensajesNuevosUsuario2 { get; set; }
         public Conversacion[] Historial { get; set; }
     }
 

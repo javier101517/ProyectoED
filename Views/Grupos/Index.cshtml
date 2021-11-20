@@ -1,0 +1,39 @@
+﻿@model WebApplication1.Models.Usuario
+
+<div class="container mt-4">
+
+    <div>Creación de grupo</div>
+
+    <div id="divColores" style="width:100%;">
+        @using (Html.BeginForm("CrearGrupo", "Grupos", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken();
+
+            <input type="text" value="@Model.Correo" name="usuarioLogueado" hidden />
+            <input type="text" name="nombreGrupo" />
+            <select class='mi-selector' id="colores" name='integrantes[]' multiple="multiple" style="width:100%;">
+                @foreach (var item in Model.Contactos)
+                {
+                    <option value='@item'>@item</option>
+                }
+            </select>
+        }
+    </div>
+</div>
+
+@if (TempData["texto"] != null)
+{
+    <script>
+            alertify.notify('@TempData["texto"].ToString()', '@TempData["color"].ToString()', 5);
+    </script>
+}
+
+<script>
+    jQuery(document).ready(function ($) {
+        $(document).ready(function () {
+            $('.mi-selector').select2();
+        });
+    });
+
+
+</script>

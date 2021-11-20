@@ -7,7 +7,7 @@ namespace WebApplication1.Models
 {
     public class RespuestaPantallaPrincipal
     {
-        public Usuario Usuario { get; set; }
+        public Usuario UsuarioLogueado { get; set; }
 
         public List<Chats> Historial { get; set; }
     }

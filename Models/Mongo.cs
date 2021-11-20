@@ -74,16 +74,33 @@ namespace WebApplication1.Models
 
             var document = new BsonDocument
             {
-                { "Envia", UsuarioEnvia },
+                { "Usuario1", UsuarioEnvia },
                 { "Historial", new BsonArray() },
-                { "NuevosChats", "0" },
-                { "Recibe", UsuarioRecibe },
-                { "MensajesNuevosRecibe", "0" },
-                { "MensajesNuevosEnvia", "0"}
+                { "Usuario2", UsuarioRecibe },
+                { "MensajesNuevosUsuario1", "0" },
+                { "MensajesNuevosUsuario2", "0"}
             };
             
             collection.InsertOne(document);
         }
+
+        public void CrearGrupo(string nombreDelGrupo, string usuarioCreador)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var collection = database.GetCollection<BsonDocument>("Grupos");
+
+            var document = new BsonDocument
+            {
+                { "NombreGrupo", nombreDelGrupo },
+                { "UsuarioCreador", usuarioCreador },
+                { "Integrantes", new BsonArray() },
+                { "Historial", new BsonArray() },
+            };
+
+            collection.InsertOne(document);
+        }
+
+
         public Usuario GetUsuario(string correo)
         {
             var database = Conexion().GetDatabase("ProyectoED");
@@ -106,7 +123,7 @@ namespace WebApplication1.Models
             var database = Conexion().GetDatabase("ProyectoED");
             var coleccion = database.GetCollection<Chats>("Chats");
             //var filtro = Builders<Chats>.Filter.Eq("Envia", usuario) & Builders<Chats>.Filter.Eq("Recibe", usuario);
-            var filtro = Builders<Chats>.Filter.Eq("Envia", usuario) | Builders<Chats>.Filter.Eq("Recibe", usuario);
+            var filtro = Builders<Chats>.Filter.Eq("Usuario1", usuario) | Builders<Chats>.Filter.Eq("Usuario2", usuario);
             var respuesta = coleccion.Find(filtro).ToList();
 
             return respuesta;
@@ -126,7 +143,7 @@ namespace WebApplication1.Models
         {
             var database = Conexion().GetDatabase("ProyectoED");
             var coleccion = database.GetCollection<Chats>("Chats");
-            var filtro = Builders<Chats>.Filter.Eq("Envia", usuarioEnvia) & Builders<Chats>.Filter.Eq("Recibe", usuarioRecibe);
+            var filtro = Builders<Chats>.Filter.Eq("Usuario1", usuarioEnvia) & Builders<Chats>.Filter.Eq("Usuario2", usuarioRecibe);
             var respuesta = coleccion.Find(filtro).FirstOrDefault();
 
             return respuesta;
@@ -138,6 +155,18 @@ namespace WebApplication1.Models
 
             var filtro = Builders<Usuario>.Filter.Eq("Correo", usuario);
             var update = Builders<Usuario>.Update.Set("Contactos", arreglo);
+            var respuesta = coleccion.UpdateOne(filtro, update);
+
+            return respuesta.IsModifiedCountAvailable;
+        }
+
+        public bool ActualizarIntegrantesGrupo(Integrante[] integrantes, string usuarioCreador, string nombreGrupo)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Usuario>("Grupos");
+
+            var filtro = Builders<Usuario>.Filter.Eq("UsuarioCreador", usuarioCreador) & Builders<Usuario>.Filter.Eq("NombreGrupo", nombreGrupo);
+            var update = Builders<Usuario>.Update.Set("Integrantes", integrantes);
             var respuesta = coleccion.UpdateOne(filtro, update);
 
             return respuesta.IsModifiedCountAvailable;
@@ -163,7 +192,9 @@ namespace WebApplication1.Models
                 var coleccion = database.GetCollection<Chats>("Chats");
 
                 var filtro = Builders<Chats>.Filter.Eq("Id", chat.Id);
-                var update = Builders<Chats>.Update.Set("MensajesNuevosRecibe", chat.MensajesNuevosRecibe).Set("Historial", chat.Historial);
+                var update = Builders<Chats>.Update.Set("MensajesNuevosUsuario1", chat.MensajesNuevosUsuario1)
+                    .Set("MensajesNuevosUsuario2", chat.MensajesNuevosUsuario2)
+                    .Set("Historial", chat.Historial);
                 var respuesta = coleccion.UpdateOne(filtro, update);
 
                 return true;

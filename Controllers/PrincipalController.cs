@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApplication1.Axiliares;
+using WebApplication1.Clases.Cifrado;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -15,13 +16,13 @@ namespace WebApplication1.Controllers
     public class PrincipalController : Controller
     {
         // GET: PrincipalController
-        public IActionResult Index(string correo)
+        public IActionResult Index(string usuarioLogueado)
         {
             Mongo mongo = new Mongo();
             RespuestaPantallaPrincipal respuesta = new RespuestaPantallaPrincipal();
-            respuesta.Usuario = mongo.GetUsuario(correo);
-            respuesta.Historial = mongo.GetChats(correo);
-            TempData["usuario"] = correo;
+            respuesta.UsuarioLogueado = mongo.GetUsuario(usuarioLogueado);
+            respuesta.Historial = mongo.GetChats(usuarioLogueado);
+            TempData["usuario"] = usuarioLogueado;
             return View(respuesta);
         }
 
@@ -64,11 +65,23 @@ namespace WebApplication1.Controllers
             return Json("false");
         }
     
-        public IActionResult Chat(string id, string usuario)
+        public IActionResult Chat(string id, string usuarioLogueado)
         {
             Mongo mongo = new Mongo();
             Chats chat = mongo.GetChat(id);
-            TempData["usuario"] = usuario;
+
+            if (chat.Usuario1 == usuarioLogueado)
+            {
+                chat.MensajesNuevosUsuario1 = "0";
+            }
+            else
+            {
+                chat.MensajesNuevosUsuario2 = "0";
+            }
+
+            mongo.ActualizarConversacion(chat);
+
+            TempData["usuario"] = usuarioLogueado;
             return View(chat);
         }
 
@@ -79,11 +92,18 @@ namespace WebApplication1.Controllers
             string Mensaje = collection["mensaje"];
             string ConversacionId = collection["conversacionId"];
 
+            char[] listadoMensaje = Mensaje.ToCharArray();
+
             ProcesosAuxilares procesos = new ProcesosAuxilares();
+
+            SDES sdes = new SDES();
+            char[] reespuestaDelCifrado = sdes.CifrarArreglo(listadoMensaje);
+
             Chats chat = procesos.ActualizarMenajse(UsuarioEnvia, Mensaje, ConversacionId);
             
             if (chat != null)
             {
+                TempData["usuario"] = UsuarioEnvia;
                 return View("Chat", chat);
             }
             else
@@ -92,23 +112,6 @@ namespace WebApplication1.Controllers
                 TempData["color"] = "error";
                 return View("Chat", chat);
             }
-            //Conversacion nuevoMensaje = new Conversacion();
-            //nuevoMensaje.Fecha = fecha.ToString();
-            //nuevoMensaje.Mensaje = Mensaje;
-            //nuevoMensaje.Usuario = UsarioEnvia;
-            
-            //Mongo mongo = new Mongo();
-            //Chats chat = mongo.GetChat(ConversacionId);
-            //List<Conversacion> historial = new List<Conversacion>(chat.Historial);
-            //historial.Add(nuevoMensaje);
-
-            //int mensajesNuevosRecibe = int.Parse(chat.MensajesNuevosRecibe);
-            //mensajesNuevosRecibe++;
-            //chat.MensajesNuevosRecibe = mensajesNuevosRecibe.ToString();
-            //chat.Historial = historial.ToArray();
-            //mongo.ActualizarConversacion(chat);
-
-            
         }
     
         public IActionResult IniciarChat(string id)

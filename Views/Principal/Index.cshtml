@@ -4,52 +4,61 @@
     <div class="d-inline-flex w-100 justify-content-between">
         <div>
             <h1>
-                Bienvenido @Model.Usuario.Nombre
+                Bienvenido @Model.UsuarioLogueado.Nombre
             </h1>
         </div>
         @*Menu*@
-        <div class="d-flex">
-            @*Notificaciones*@
-            <div>
-                <button type="button" class="btn position-relative ml-2" data-toggle="modal" data-target="#VerSolicitudes">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                    </svg>
-                    @if (Model.Usuario.Solicitudes.Length > 0)
-                    {
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            @Model.Usuario.Solicitudes.Length
-                        </span>
-                    }
-                </button>
-            </div>
-            @*Agregar Usuario*@
-            <div>
-                <button type="button" class="btn ml-2" data-toggle="modal" data-target="#exampleModal">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
-                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
-                        <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z" />
-                    </svg>
-                </button>
-            </div>
-            @*Contactos*@
-            <div>
-                <a class="btn text-decoration-none" asp-controller="Contactos" asp-action="Index" asp-route-id="@Model.Usuario.Correo">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
-                        <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" />
-                    </svg>
-                </a>
-            </div>
-            @*Logout*@
-            <div>
-                <a class="btn text-decoration-none" asp-controller="Home" asp-action="Index">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
-                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
-                    </svg>
-                </a>
-            </div>
+    <div class="d-flex">
+        @*Notificaciones*@
+        <div>
+            <button type="button" class="btn position-relative ml-2" data-toggle="modal" data-target="#VerSolicitudes">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
+                </svg>
+                @if (Model.UsuarioLogueado.Solicitudes.Length > 0)
+                {
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        @Model.UsuarioLogueado.Solicitudes.Length
+                    </span>
+                }
+            </button>
         </div>
+        @*Agregar Usuario*@
+        <div>
+            <button type="button" class="btn ml-2" data-toggle="modal" data-target="#exampleModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+                    <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                    <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z" />
+                </svg>
+            </button>
+        </div>
+        @*Contactos*@
+        <div>
+            <a class="btn text-decoration-none" asp-controller="Contactos" asp-action="Index" asp-route-id="@Model.UsuarioLogueado.Correo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal" viewBox="0 0 16 16">
+                    <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z" />
+                    <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />
+                </svg>
+            </a>
+        </div>
+        @*Grupos*@
+        <div>
+            <a class="btn text-decoration-none" asp-controller="Grupos" asp-action="Index" asp-route-usuarioLogueado="@Model.UsuarioLogueado.Correo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                    <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" />
+                </svg>
+            </a>
+        </div>
+        @*Logout*@
+        <div>
+            <a class="btn text-decoration-none" asp-controller="Home" asp-action="Index">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                </svg>
+            </a>
+        </div>
+    </div>
     </div>
 
 
@@ -58,40 +67,37 @@
         @if (Model.Historial != null)
         {
             <ol class="list-group list-group-numbered">
-                @foreach (var item in Model.Historial)
+                @foreach (var chat in Model.Historial)
                 {
                     @*<a asp-controller="Principal" asp-action="Chat" asp-route-id="@item.Envia, @item.Recibe" class="text-decoration-none">*@
-                    <a asp-controller="Principal" asp-action="Chat" asp-route-id="@item.Id" asp-route-usuario="@Model.Usuario.Correo" class="text-decoration-none">
+                    <a asp-controller="Principal" asp-action="Chat" asp-route-id="@chat.Id" asp-route-usuarioLogueado="@Model.UsuarioLogueado.Correo" class="text-decoration-none">
                     <li class="list-group-item d-flex justify-content-between align-items-start">
-                        @if (item.Recibe == Model.Usuario.Correo && int.Parse(item.MensajesNuevosRecibe) > 0)
-                        {
-                            <div class="ms-2 me-auto">
-                                <div class="fw-bold">
-                                    @item.Envia
-                                </div>
-                                @*ultimo mensaje*@
-                            </div>
-                            <span class="badge bg-primary rounded-pill">@item.MensajesNuevosRecibe</span>
-                        }
-                        else
-                        {
-                            if (item.Recibe == Model.Usuario.Correo)
+
+                       
+                            @if (Model.UsuarioLogueado.Correo == chat.Usuario1)
                             {
                                 <div class="ms-2 me-auto">
                                     <div class="fw-bold">
-                                        @item.Envia
+                                        @chat.Usuario2
                                     </div>
                                 </div>
+                                @if (chat.MensajesNuevosUsuario1 != "0")
+                                {
+                                    <span class="badge bg-primary rounded-pill">@chat.MensajesNuevosUsuario1</span>
+                                }
                             }
                             else
                             {
                                 <div class="ms-2 me-auto">
                                     <div class="fw-bold">
-                                        @item.Recibe
+                                        @chat.Usuario1
                                     </div>
                                 </div>
+                                @if (chat.MensajesNuevosUsuario2 != "0")
+                                {
+                                    <span class="badge bg-primary rounded-pill">@chat.MensajesNuevosUsuario2</span>
+                                }
                             }
-                        }
                     </li>
                     </a>
                 }
@@ -113,7 +119,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <input type="text" value="@Model.Usuario.Correo" name="id" hidden />
+                    <input type="text" value="@Model.UsuarioLogueado.Correo" name="id" hidden />
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="correo" class="col-form-label">Correo electrónico:</label>
@@ -140,10 +146,10 @@
                     </button>
                 </div>
                 <ul class="list-group">
-                    @if (Model.Usuario.Solicitudes != null)
+                    @if (Model.UsuarioLogueado.Solicitudes != null)
                     {
 
-                        @foreach (var item in Model.Usuario.Solicitudes)
+                        @foreach (var item in Model.UsuarioLogueado.Solicitudes)
                         {
 
                             <li class="list-group-item d-flex justify-content-between">
@@ -151,7 +157,7 @@
                                     @item
                                 </div>
                                 <div>
-                                    <button class="btn btn-success" onclick="aceptarSolicitud('@Html.DisplayFor(modelItem => Model.Usuario.Correo)' ,'@Html.DisplayFor(modelItem => item)')">
+                                    <button class="btn btn-success" onclick="aceptarSolicitud('@Html.DisplayFor(modelItem => Model.UsuarioLogueado.Correo)' ,'@Html.DisplayFor(modelItem => item)')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                             <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />

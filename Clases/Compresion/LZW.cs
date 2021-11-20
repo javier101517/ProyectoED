@@ -548,16 +548,16 @@ namespace WebApplication1.Clases.Compresion
 
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // JSON
-        public Compresion ObtenerDatosCompresion()
-        {
-            Compresion infoCompress = new Compresion();
-            infoCompress.FileName = this.FileName;
-            infoCompress.PathFileHUFF = this.PathFileHUFF;
-            infoCompress.CompressRatio = this.CompressRatio;
-            infoCompress.CompressFactor = this.CompressFactor;
-            infoCompress.ReductionPer = this.ReductionPer;
+        //public Compresion ObtenerDatosCompresion()
+        //{
+        //    Compresion infoCompress = new Compresion();
+        //    infoCompress.FileName = this.FileName;
+        //    infoCompress.PathFileHUFF = this.PathFileHUFF;
+        //    infoCompress.CompressRatio = this.CompressRatio;
+        //    infoCompress.CompressFactor = this.CompressFactor;
+        //    infoCompress.ReductionPer = this.ReductionPer;
 
-            return infoCompress;
-        }
+        //    return infoCompress;
+        //}
     }
 }
