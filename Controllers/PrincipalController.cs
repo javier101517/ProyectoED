@@ -168,22 +168,27 @@ namespace WebApplication1.Controllers
             string[] listado = id.Split(",");
             Mongo mongo = new Mongo();
             Chats chat = mongo.GetChat(listado[0], listado[1]);
+            RespuestaChat respuestaChat = new RespuestaChat();
+            ProcesosAuxilares procesos = new ProcesosAuxilares();
 
             if ( chat != null)
             {
-                return View("Chat", chat);
+                respuestaChat.chatOriginal = chat;
+                respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
+                return View("Chat", respuestaChat);
             }
 
             chat = mongo.GetChat(listado[1], listado[0]);
             if (chat != null)
             {
-                return View("Chat", chat);
+                respuestaChat.chatOriginal = chat;
+                respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
+                return View("Chat", respuestaChat);
             }
 
             mongo.CrearChat(listado[0], listado[1]);
             chat = mongo.GetChat(listado[0], listado[1]);
 
-            RespuestaChat respuestaChat = new RespuestaChat();
             respuestaChat.chatOriginal = chat;
             respuestaChat.conversacionesDescifradas = null;
 

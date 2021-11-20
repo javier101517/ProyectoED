@@ -69,7 +69,6 @@
             <ol class="list-group list-group-numbered">
                 @foreach (var chat in Model.Historial)
                 {
-                    @*<a asp-controller="Principal" asp-action="Chat" asp-route-id="@item.Envia, @item.Recibe" class="text-decoration-none">*@
                     <a asp-controller="Principal" asp-action="Chat" asp-route-id="@chat.Id" asp-route-usuarioLogueado="@Model.UsuarioLogueado.Correo" class="text-decoration-none">
                     <li class="list-group-item d-flex justify-content-between align-items-start">
 
