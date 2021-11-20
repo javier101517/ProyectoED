@@ -203,11 +203,11 @@ namespace WebApplication1.Controllers
             {
                 if (listadoPalabras[i] != "")
                 {
-                    listadoCaracteres[i] = Convert.ToChar(listadoCaracteres[i]);
+                    listadoCaracteres[i] = Convert.ToChar(listadoPalabras[i]);
                 }
             }
 
-            //char[] respuestaDescompresion = lzw.DescomprimirArreglo(listadoCaracteres);
+            char[] respuestaDescompresion = lzw.DescomprimirArreglo(listadoCaracteres);
 
             return File(Encoding.UTF8.GetBytes("Texto descomprimido"),"text/plain", "archivo.txt");
         }
