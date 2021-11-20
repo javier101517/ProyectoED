@@ -113,7 +113,7 @@ namespace WebApplication1.Clases.Cifrado
             llave = LS_2(llave.Substring(0, 5)) + LS_2(llave.Substring(5, 5));
             K2 = P8(llave);
         }
-        
+
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // FUNCIONES
 
@@ -200,8 +200,8 @@ namespace WebApplication1.Clases.Cifrado
 
         private string S0(string _arreglo)
         {
-            string[,] matrizS0 = { 
-                { "01", "00", "11", "10" }, 
+            string[,] matrizS0 = {
+                { "01", "00", "11", "10" },
                 { "11", "10", "01", "00" },
                 { "00", "10", "01", "11" },
                 { "11", "01", "11", "10" },
@@ -243,7 +243,7 @@ namespace WebApplication1.Clases.Cifrado
 
             return arreglo;
         }
-        
+
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CIFRADO
 
@@ -265,14 +265,14 @@ namespace WebApplication1.Clases.Cifrado
         {
             ObtenerLlave("1001110001");
 
-            char[] lstCifrado = new char[lstContenido.Length];
-            int cont = 0;
+            char[] lst = new char[lstContenido.Length];
+            lst = lstContenido;
+            char[] lstCifrado = new char[lst.Length];
 
-            foreach (var caracter in lstContenido)
+            for (int x = 0; x < lst.Length; x++)
             {
-                byte ascii = CifrarASCII(caracter);
-                lstContenido[cont] = Convert.ToChar(ascii);
-                cont++;
+                byte ascii = CifrarASCII(lst[x]);
+                lstCifrado[x] = Convert.ToChar(ascii);
             }
 
             return lstCifrado;
@@ -306,7 +306,7 @@ namespace WebApplication1.Clases.Cifrado
                 }
                 catch
                 {
-                    letter = reader.Read();                   
+                    letter = reader.Read();
                 }
 
                 if (letter != -1)
@@ -328,7 +328,6 @@ namespace WebApplication1.Clases.Cifrado
                 File.Delete(cipherFile.FullName);
             }
 
-            //File.Create(PathFileHUFF);
             List<byte> _FileCompress = Cifrar();
             FileStream stream = new FileStream(cipherFile.FullName, FileMode.Create, FileAccess.Write);
             BinaryWriter writer = new BinaryWriter(stream);
@@ -347,7 +346,7 @@ namespace WebApplication1.Clases.Cifrado
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DESCIFRADO
 
-        public byte DescifrarASCII(int _ascii)
+        private byte DescifrarASCII(int _ascii)
         {
             string arreglo = Convert.ToString(_ascii, 2);
             arreglo = arreglo.PadLeft(8, '0');
@@ -359,6 +358,19 @@ namespace WebApplication1.Clases.Cifrado
             arreglo = IP_1(arreglo);
 
             return Convert.ToByte(arreglo, 2);
+        }
+
+        public List<byte> Descifrar()
+        {
+            List<byte> listaByteDescifrar = new List<byte>();
+
+            List<int> listaCharArchivo = LecturaArchivoCipher();
+            for (int x = 0; x < listaCharArchivo.Count; x++)
+            {
+                listaByteDescifrar.Add(DescifrarASCII(listaCharArchivo[x]));
+            }
+
+            return listaByteDescifrar;
         }
 
         public char[] DescifrarArreglo(char[] lstContCifrado)
@@ -376,19 +388,6 @@ namespace WebApplication1.Clases.Cifrado
             }
 
             return lstOriginal;
-        }
-
-        public List<byte> Descifrar()
-        {
-            List<byte> listaByteDescifrar = new List<byte>();
-
-            List<int> listaCharArchivo = LecturaArchivoCipher();
-            for (int x = 0; x < listaCharArchivo.Count; x++)
-            {
-                listaByteDescifrar.Add(DescifrarASCII(listaCharArchivo[x]));
-            }
-
-            return listaByteDescifrar;
         }
 
         private List<int> LecturaArchivoCipher()
@@ -443,40 +442,6 @@ namespace WebApplication1.Clases.Cifrado
             stream.Close();
 
             Console.WriteLine("\n\nARCHIVO DESCIFRADO EXITOSAMENTE");
-        }
-
-
-        public void PruebaArchivo()
-        {
-            if (File.Exists(originalFile.FullName))
-            {
-                File.Delete(originalFile.FullName);
-            }
-
-            List<byte> _FileDecipher = Descifrar();
-            FileStream stream = new FileStream(originalFile.FullName, FileMode.Create, FileAccess.Write);
-            BinaryWriter writer = new BinaryWriter(stream);
-
-            for (int x = 0; x < _FileDecipher.Count; x++)
-            {
-                writer.Write(_FileDecipher.ElementAt(x));
-            }
-
-            writer.Close();
-            stream.Close();
-
-            Console.WriteLine("\n\nARCHIVO DESCIFRADO EXITOSAMENTE");
-        }
-
-        // ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // JSON
-
-        public Cifrados ObtenerDatosArchivo()
-        {
-            Cifrados infoCipher = new Cifrados();
-            infoCipher.FileName = string.Empty;
-            infoCipher.PathFileCipher = string.Empty;
-            return infoCipher;
         }
     }
 }
