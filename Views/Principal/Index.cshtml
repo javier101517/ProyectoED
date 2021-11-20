@@ -66,41 +66,55 @@
     <div class="listado">
         @if (Model.Historial != null)
         {
-            <ol class="list-group list-group-numbered">
-                @foreach (var chat in Model.Historial)
-                {
-                    <a asp-controller="Principal" asp-action="Chat" asp-route-id="@chat.Id" asp-route-usuarioLogueado="@Model.UsuarioLogueado.Correo" class="text-decoration-none">
-                    <li class="list-group-item d-flex justify-content-between align-items-start">
+        <ol class="list-group list-group-numbered">
+            @foreach (var chat in Model.Historial)
+            {
+                <a asp-controller="Principal" asp-action="Chat" asp-route-id="@chat.Id" asp-route-usuarioLogueado="@Model.UsuarioLogueado.Correo" class="text-decoration-none">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
 
-                       
-                            @if (Model.UsuarioLogueado.Correo == chat.Usuario1)
-                            {
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold">
-                                        @chat.Usuario2
-                                    </div>
-                                </div>
-                                @if (chat.MensajesNuevosUsuario1 != "0")
-                                {
-                                    <span class="badge bg-primary rounded-pill">@chat.MensajesNuevosUsuario1</span>
-                                }
-                            }
-                            else
-                            {
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold">
-                                        @chat.Usuario1
-                                    </div>
-                                </div>
-                                @if (chat.MensajesNuevosUsuario2 != "0")
-                                {
-                                    <span class="badge bg-primary rounded-pill">@chat.MensajesNuevosUsuario2</span>
-                                }
-                            }
+
+                    @if (Model.UsuarioLogueado.Correo == chat.Usuario1)
+                    {
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">
+                                @chat.Usuario2
+                            </div>
+                        </div>
+                        @if (chat.MensajesNuevosUsuario1 != "0")
+                        {
+                            <span class="badge bg-primary rounded-pill">@chat.MensajesNuevosUsuario1</span>
+                        }
+                    }
+                    else
+                    {
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">
+                                @chat.Usuario1
+                            </div>
+                        </div>
+                        @if (chat.MensajesNuevosUsuario2 != "0")
+                        {
+                            <span class="badge bg-primary rounded-pill">@chat.MensajesNuevosUsuario2</span>
+                        }
+                    }
+                </li>
+                </a>
+            }
+
+            @foreach (var item in Model.UsuarioLogueado.Grupos)
+            {
+                <a asp-controller="Grupos" asp-action="Chat" asp-route-idGrupo="@item.IdGrupo" asp-route-usuarioLogueado="@Model.UsuarioLogueado.Correo" class="text-decoration-none">
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">
+                                @item.NombreGrupo
+                            </div>
+                        </div>
                     </li>
-                    </a>
-                }
-            </ol>
+                </a>
+            }
+
+        </ol>
         }
 
     </div>

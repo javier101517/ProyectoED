@@ -65,7 +65,6 @@ namespace WebApplication1.Models
 
             collection.InsertOne(document);
         }
-
         
         public void CrearChat(string UsuarioEnvia, string UsuarioRecibe) 
         {
@@ -149,12 +148,56 @@ namespace WebApplication1.Models
             return respuesta;
         }
 
+        public Grupo GetGrupo(string usuarioLogueado, string nombreGrupo)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Grupo>("Grupos");
+            var filtro = Builders<Grupo>.Filter.Eq("UsuarioCreador", usuarioLogueado) & Builders<Grupo>.Filter.Eq("NombreGrupo", nombreGrupo);
+            var respuesta = coleccion.Find(filtro).FirstOrDefault();
+
+            return respuesta;
+        }
+
+        public Grupo GetGrupo(string grupoId)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Grupo>("Grupos");
+            var filtro = Builders<Grupo>.Filter.Eq("Id", grupoId);
+            var respuesta = coleccion.Find(filtro).FirstOrDefault();
+
+            return respuesta;
+        }
+
         public bool ActualizarContactos(string usuario, string[] arreglo) {
             var database = Conexion().GetDatabase("ProyectoED");
             var coleccion = database.GetCollection<Usuario>("Usuarios");
 
             var filtro = Builders<Usuario>.Filter.Eq("Correo", usuario);
             var update = Builders<Usuario>.Update.Set("Contactos", arreglo);
+            var respuesta = coleccion.UpdateOne(filtro, update);
+
+            return respuesta.IsModifiedCountAvailable;
+        }
+
+        public bool ActualizarUsuarioConGrupo(Usuario usuario)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Usuario>("Usuarios");
+
+            var filtro = Builders<Usuario>.Filter.Eq("Correo", usuario.Correo);
+            var update = Builders<Usuario>.Update.Set("Grupos", usuario.Grupos);
+            var respuesta = coleccion.UpdateOne(filtro, update);
+
+            return respuesta.IsModifiedCountAvailable;
+        }
+
+        public bool ActualizarHistorialDeGrupo(Grupo grupo)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Usuario>("Grupos");
+
+            var filtro = Builders<Usuario>.Filter.Eq("Id", grupo.Id);
+            var update = Builders<Usuario>.Update.Set("Historial", grupo.Historial);
             var respuesta = coleccion.UpdateOne(filtro, update);
 
             return respuesta.IsModifiedCountAvailable;

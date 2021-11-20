@@ -15,12 +15,18 @@ namespace WebApplication1.Models
         public string UsuarioCreador { get; set; }
         public string NombreGrupo { get; set; }
         public Integrante[] Integrantes { get; set; }
-        public string[] Historial { get; set; }
+        public Conversacion[] Historial { get; set; }
     }
 
     public class Integrante
     {
         public string Usuario { get; set; }
         public string MensajesSinLeer { get; set; }
+    }
+
+    public class DescripcionGrupo
+    {
+        public string IdGrupo { get; set; }
+        public string NombreGrupo { get; set; }
     }
 }

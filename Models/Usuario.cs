@@ -19,7 +19,7 @@ namespace WebApplication1.Models
         public string Password { get; set; }
         public string[] Contactos { get; set; }
         public string[] Solicitudes { get; set; }
-        public Object Grupos { get; set; }
+        public DescripcionGrupo[] Grupos { get; set; }
     }
         
 }

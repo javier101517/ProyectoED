@@ -24,4 +24,10 @@ namespace WebApplication1.Models
         public List<Conversacion> conversacionesDescifradas { get; set; }
     }
 
+    public class RespuestaGrupo
+    {
+        public Grupo GrupoOriginal { get; set; }
+        public List<Conversacion> conversacionesDescifradas { get; set; }
+    }
+
 }

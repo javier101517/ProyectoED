@@ -31,20 +31,6 @@ namespace WebApplication1.Controllers
         public ActionResult AceptarSolicitud(string usuario, string invitado)
         {
             Mongo mongo = new Mongo();
-            //Usuario respuesta = mongo.GetUsuario(usuario);
-            //List<string> arreglo = new List<string>();
-
-            //if (respuesta == null)
-            //{
-            //    arreglo.Add(invitado);
-            //}
-            //else
-            //{
-            //    arreglo = new List<string>(respuesta.Contactos);
-            //    arreglo.Add(invitado);
-            //}
-
-            //bool respuestaActualizar = mongo.ActualizarContactos(usuario, arreglo.ToArray());
             AccionesController acciones = new AccionesController();
             if (acciones.AceptarSolicitud(usuario, invitado))
             {
@@ -208,8 +194,13 @@ namespace WebApplication1.Controllers
             }
 
             char[] respuestaDescompresion = lzw.DescomprimirArreglo(listadoCaracteres);
+            string respuestaFinal = "";
+            foreach (var item in respuestaDescompresion)
+            {
+                respuestaFinal += item;
+            }
 
-            return File(Encoding.UTF8.GetBytes("Texto descomprimido"),"text/plain", "archivo.txt");
+            return File(Encoding.UTF8.GetBytes(respuestaFinal),"text/plain", "archivo.txt");
         }
 
     }
