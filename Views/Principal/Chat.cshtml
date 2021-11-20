@@ -1,4 +1,4 @@
-﻿@model WebApplication1.Models.Chats
+﻿@model WebApplication1.Models.RespuestaChat
 
 <div class="container">
     <div class="mt-2 mb-2">
@@ -12,9 +12,9 @@
     <div class="position-relative" style="height: 580px; overflow-y: scroll">
 
         <ul class="list-group mb-2 h-75">
-            @if (Model != null)
+            @if (Model.conversacionesDescifradas != null)
             {
-                @foreach (var item in Model.Historial)
+                @foreach (var item in Model.conversacionesDescifradas)
                 {
                     if (@TempData["usuario"].ToString() == item.Usuario)
                     {
@@ -39,7 +39,7 @@
         <div class="mb-3 mt-2 row " style="position:sticky; bottom: 50px;">
             <div class="col-sm-10">
                 <input type="text" value="@TempData["usuario"].ToString()" name="envia" hidden />
-                <input type="text" value="@Model.Id" name="conversacionId" hidden />
+                <input type="text" value="@Model.chatOriginal.Id" name="conversacionId" hidden />
                 <input type="text" class="form-control" id="mensjae" name="mensaje">
             </div>
 
@@ -76,8 +76,8 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <input type="text" value="@Model.Usuario1" name="envia" hidden />
-                        <input type="text" value="@Model.Id" name="conversacionId" hidden />
+                        <input type="text" value="@TempData["usuario"].ToString()" name="envia" hidden />
+                        <input type="text" value="@Model.chatOriginal.Id" name="conversacionId" hidden />
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.Clases.Cifrado;
 using WebApplication1.Models;
 
 namespace WebApplication1.Axiliares
@@ -46,6 +47,47 @@ namespace WebApplication1.Axiliares
                 return null;
                 throw;
             }
+        }
+    
+        
+        public List<Conversacion> DescifrarChatParaVista(Chats chatOriginal)
+        {
+            List<Conversacion> nuevoHistorial = new List<Conversacion>();
+            RespuestaChat respuestaChat = new RespuestaChat();
+            SDES sdes = new SDES();
+
+            foreach (var item in chatOriginal.Historial)
+            {
+                string[] listadoCaracteres = item.Mensaje.Split('~');
+                char[] listadoFinal = new char[listadoCaracteres.Length];
+
+                for (int i = 0; i < listadoCaracteres.Length; i++)
+                {
+                    if (listadoCaracteres[i] != "")
+                    {
+                        listadoFinal[i] = Convert.ToChar(listadoCaracteres[i]);
+                    }
+                }
+
+                char[] listadoDescifrado = sdes.DescifrarArreglo(listadoFinal);
+                string mensajeDescifrado = "";
+
+                foreach (var item2 in listadoDescifrado)
+                {
+                    mensajeDescifrado += item2;
+                }
+
+                Conversacion ConversacionDescifrada = new Conversacion();
+                ConversacionDescifrada.Fecha = item.Fecha;
+                ConversacionDescifrada.Mensaje = mensajeDescifrado;
+                ConversacionDescifrada.Usuario = item.Usuario;
+
+                nuevoHistorial.Add(ConversacionDescifrada);
+            }
+
+            return nuevoHistorial;
+
+
         }
     }
 }

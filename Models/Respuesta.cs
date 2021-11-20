@@ -17,4 +17,11 @@ namespace WebApplication1.Models
         public Usuario Usuario { get; set; }
         public List<String> Contactos { get; set; }
     }
+
+    public class RespuestaChat
+    {
+        public Chats chatOriginal { get; set; }
+        public List<Conversacion> conversacionesDescifradas { get; set; }
+    }
+
 }

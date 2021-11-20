@@ -70,6 +70,46 @@ namespace WebApplication1.Controllers
             Mongo mongo = new Mongo();
             Chats chat = mongo.GetChat(id);
 
+            ProcesosAuxilares procesos = new ProcesosAuxilares();
+            List<Conversacion> nuevoHistorial = procesos.DescifrarChatParaVista(chat);
+
+            //List<Conversacion> nuevoHistorial = new List<Conversacion>();
+            RespuestaChat respuestaChat = new RespuestaChat();
+            //SDES sdes = new SDES();
+            respuestaChat.chatOriginal = chat;
+            respuestaChat.conversacionesDescifradas = nuevoHistorial;
+
+            //foreach (var item in chat.Historial)
+            //{
+            //    string[] listadoCaracteres = item.Mensaje.Split('~');
+            //    char[] listadoFinal = new char[listadoCaracteres.Length] ;
+
+            //    for (int i = 0; i < listadoCaracteres.Length; i++)
+            //    {
+            //        if (listadoCaracteres[i] != "")
+            //        {
+            //            listadoFinal[i] =  Convert.ToChar(listadoCaracteres[i]);
+            //        }
+            //    } 
+
+            //    char[] listadoDescifrado = sdes.DescifrarArreglo(listadoFinal);
+            //    string mensajeDescifrado = "";
+
+            //    foreach (var item2 in listadoDescifrado)
+            //    {
+            //        mensajeDescifrado += item2;
+            //    }
+
+            //    Conversacion ConversacionDescifrada = new Conversacion();
+            //    ConversacionDescifrada.Fecha = item.Fecha;
+            //    ConversacionDescifrada.Mensaje = mensajeDescifrado;
+            //    ConversacionDescifrada.Usuario = item.Usuario;
+
+            //    nuevoHistorial.Add(ConversacionDescifrada);
+            //}
+
+            //respuestaChat.conversacionesDescifradas = nuevoHistorial;
+
             if (chat.Usuario1 == usuarioLogueado)
             {
                 chat.MensajesNuevosUsuario1 = "0";
@@ -82,7 +122,7 @@ namespace WebApplication1.Controllers
             mongo.ActualizarConversacion(chat);
 
             TempData["usuario"] = usuarioLogueado;
-            return View(chat);
+            return View(respuestaChat);
         }
 
         public IActionResult AgregarMensaje(IFormCollection collection)
@@ -97,20 +137,29 @@ namespace WebApplication1.Controllers
             ProcesosAuxilares procesos = new ProcesosAuxilares();
 
             SDES sdes = new SDES();
-            char[] reespuestaDelCifrado = sdes.CifrarArreglo(listadoMensaje);
+            char[] respuestaDelCifrado = sdes.CifrarArreglo(listadoMensaje);
+            string mensajeCifrado = "";
+            foreach (var item in respuestaDelCifrado)
+            {
+                mensajeCifrado += item + "~";
+            }
 
-            Chats chat = procesos.ActualizarMenajse(UsuarioEnvia, Mensaje, ConversacionId);
-            
+            Chats chat = procesos.ActualizarMenajse(UsuarioEnvia, mensajeCifrado, ConversacionId);
+            RespuestaChat respuestaChat = new RespuestaChat();
             if (chat != null)
             {
+                respuestaChat.chatOriginal = chat;
+                respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
                 TempData["usuario"] = UsuarioEnvia;
-                return View("Chat", chat);
+                return View("Chat", respuestaChat);
             }
             else
             {
+                respuestaChat.chatOriginal = chat;
+                respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
                 TempData["texto"] = "Error al enviar mensaje.";
                 TempData["color"] = "error";
-                return View("Chat", chat);
+                return View("Chat", respuestaChat);
             }
         }
     
@@ -133,7 +182,12 @@ namespace WebApplication1.Controllers
 
             mongo.CrearChat(listado[0], listado[1]);
             chat = mongo.GetChat(listado[0], listado[1]);
-            return View("Chat", chat);
+
+            RespuestaChat respuestaChat = new RespuestaChat();
+            respuestaChat.chatOriginal = chat;
+            respuestaChat.conversacionesDescifradas = null;
+
+            return View("Chat", respuestaChat);
         }
 
         public IActionResult AgregarArchivos(IFormFile adjunto, string envia, string conversacionId)
