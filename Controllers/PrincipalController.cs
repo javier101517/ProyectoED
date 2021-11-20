@@ -200,7 +200,11 @@ namespace WebApplication1.Controllers
                 respuestaFinal += item;
             }
 
+<<<<<<< HEAD
             return File(Encoding.UTF8.GetBytes(respuestaFinal),"text/plain", "archivo.txt");
+=======
+            return File(Encoding.UTF8.GetBytes(respuestaDescompresion),"text/plain", "archivo.txt");
+>>>>>>> 83a5cb8b1a8070c829147cbe6550c0c86492f39b
         }
 
     }
