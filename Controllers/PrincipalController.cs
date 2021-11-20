@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApplication1.Axiliares;
+using WebApplication1.Clases.Cifrado;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -91,7 +92,13 @@ namespace WebApplication1.Controllers
             string Mensaje = collection["mensaje"];
             string ConversacionId = collection["conversacionId"];
 
+            char[] listadoMensaje = Mensaje.ToCharArray();
+
             ProcesosAuxilares procesos = new ProcesosAuxilares();
+
+            SDES sdes = new SDES();
+            char[] reespuestaDelCifrado = sdes.CifrarArreglo(listadoMensaje);
+
             Chats chat = procesos.ActualizarMenajse(UsuarioEnvia, Mensaje, ConversacionId);
             
             if (chat != null)
@@ -105,23 +112,6 @@ namespace WebApplication1.Controllers
                 TempData["color"] = "error";
                 return View("Chat", chat);
             }
-            //Conversacion nuevoMensaje = new Conversacion();
-            //nuevoMensaje.Fecha = fecha.ToString();
-            //nuevoMensaje.Mensaje = Mensaje;
-            //nuevoMensaje.Usuario = UsarioEnvia;
-            
-            //Mongo mongo = new Mongo();
-            //Chats chat = mongo.GetChat(ConversacionId);
-            //List<Conversacion> historial = new List<Conversacion>(chat.Historial);
-            //historial.Add(nuevoMensaje);
-
-            //int mensajesNuevosRecibe = int.Parse(chat.MensajesNuevosRecibe);
-            //mensajesNuevosRecibe++;
-            //chat.MensajesNuevosRecibe = mensajesNuevosRecibe.ToString();
-            //chat.Historial = historial.ToArray();
-            //mongo.ActualizarConversacion(chat);
-
-            
         }
     
         public IActionResult IniciarChat(string id)

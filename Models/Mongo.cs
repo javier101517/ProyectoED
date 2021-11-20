@@ -83,6 +83,24 @@ namespace WebApplication1.Models
             
             collection.InsertOne(document);
         }
+
+        public void CrearGrupo(string nombreDelGrupo, string usuarioCreador)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var collection = database.GetCollection<BsonDocument>("Grupos");
+
+            var document = new BsonDocument
+            {
+                { "NombreGrupo", nombreDelGrupo },
+                { "UsuarioCreador", usuarioCreador },
+                { "Integrantes", new BsonArray() },
+                { "Historial", new BsonArray() },
+            };
+
+            collection.InsertOne(document);
+        }
+
+
         public Usuario GetUsuario(string correo)
         {
             var database = Conexion().GetDatabase("ProyectoED");
@@ -137,6 +155,18 @@ namespace WebApplication1.Models
 
             var filtro = Builders<Usuario>.Filter.Eq("Correo", usuario);
             var update = Builders<Usuario>.Update.Set("Contactos", arreglo);
+            var respuesta = coleccion.UpdateOne(filtro, update);
+
+            return respuesta.IsModifiedCountAvailable;
+        }
+
+        public bool ActualizarIntegrantesGrupo(Integrante[] integrantes, string usuarioCreador, string nombreGrupo)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Usuario>("Grupos");
+
+            var filtro = Builders<Usuario>.Filter.Eq("UsuarioCreador", usuarioCreador) & Builders<Usuario>.Filter.Eq("NombreGrupo", nombreGrupo);
+            var update = Builders<Usuario>.Update.Set("Integrantes", integrantes);
             var respuesta = coleccion.UpdateOne(filtro, update);
 
             return respuesta.IsModifiedCountAvailable;
