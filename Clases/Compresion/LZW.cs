@@ -24,6 +24,12 @@ namespace WebApplication1.Clases.Compresion
 
         private FileInfo compressFile { get; set; }
 
+        public LZW()
+        {
+            this.originalFile = null;
+            this.compressFile = null;
+        }
+
         public LZW(FileInfo _originalFile, FileInfo _compressFile)
         {
             this.originalFile = _originalFile;
