@@ -9,7 +9,7 @@ namespace WebApplication1.Axiliares
 {
     public class ProcesosAuxilares
     {
-        public Chats ActualizarMenajse(string UsuarioEnvia, string Mensaje, string ConversacionId)
+        public Chats ActualizarMenajse(string UsuarioEnvia, string Mensaje, string ConversacionId, string tipoMensaje)
         {
             try
             {
@@ -18,6 +18,7 @@ namespace WebApplication1.Axiliares
                 nuevoMensaje.Fecha = fecha.ToString();
                 nuevoMensaje.Mensaje = Mensaje;
                 nuevoMensaje.Usuario = UsuarioEnvia;
+                nuevoMensaje.tipo = tipoMensaje;
 
                 Mongo mongo = new Mongo();
                 Chats chat = mongo.GetChat(ConversacionId);
@@ -82,6 +83,7 @@ namespace WebApplication1.Axiliares
                 ConversacionDescifrada.Fecha = item.Fecha;
                 ConversacionDescifrada.Mensaje = mensajeDescifrado;
                 ConversacionDescifrada.Usuario = item.Usuario;
+                ConversacionDescifrada.tipo = item.tipo;
 
                 nuevoHistorial.Add(ConversacionDescifrada);
             }

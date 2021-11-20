@@ -73,43 +73,9 @@ namespace WebApplication1.Controllers
 
             ProcesosAuxilares procesos = new ProcesosAuxilares();
             List<Conversacion> nuevoHistorial = procesos.DescifrarChatParaVista(chat);
-
-            //List<Conversacion> nuevoHistorial = new List<Conversacion>();
             RespuestaChat respuestaChat = new RespuestaChat();
-            //SDES sdes = new SDES();
             respuestaChat.chatOriginal = chat;
             respuestaChat.conversacionesDescifradas = nuevoHistorial;
-
-            //foreach (var item in chat.Historial)
-            //{
-            //    string[] listadoCaracteres = item.Mensaje.Split('~');
-            //    char[] listadoFinal = new char[listadoCaracteres.Length] ;
-
-            //    for (int i = 0; i < listadoCaracteres.Length; i++)
-            //    {
-            //        if (listadoCaracteres[i] != "")
-            //        {
-            //            listadoFinal[i] =  Convert.ToChar(listadoCaracteres[i]);
-            //        }
-            //    } 
-
-            //    char[] listadoDescifrado = sdes.DescifrarArreglo(listadoFinal);
-            //    string mensajeDescifrado = "";
-
-            //    foreach (var item2 in listadoDescifrado)
-            //    {
-            //        mensajeDescifrado += item2;
-            //    }
-
-            //    Conversacion ConversacionDescifrada = new Conversacion();
-            //    ConversacionDescifrada.Fecha = item.Fecha;
-            //    ConversacionDescifrada.Mensaje = mensajeDescifrado;
-            //    ConversacionDescifrada.Usuario = item.Usuario;
-
-            //    nuevoHistorial.Add(ConversacionDescifrada);
-            //}
-
-            //respuestaChat.conversacionesDescifradas = nuevoHistorial;
 
             if (chat.Usuario1 == usuarioLogueado)
             {
@@ -129,9 +95,10 @@ namespace WebApplication1.Controllers
         public IActionResult AgregarMensaje(IFormCollection collection)
         {
             DateTime fecha = DateTime.Now;
-            string UsuarioEnvia = collection["envia"];
+            string usuarioLogueado = collection["usuarioLogueado"];
             string Mensaje = collection["mensaje"];
             string ConversacionId = collection["conversacionId"];
+            string TipoMensaje = collection["tipoMensaje"];
 
             char[] listadoMensaje = Mensaje.ToCharArray();
 
@@ -145,13 +112,13 @@ namespace WebApplication1.Controllers
                 mensajeCifrado += item + "~";
             }
 
-            Chats chat = procesos.ActualizarMenajse(UsuarioEnvia, mensajeCifrado, ConversacionId);
+            Chats chat = procesos.ActualizarMenajse(usuarioLogueado, mensajeCifrado, ConversacionId, TipoMensaje);
             RespuestaChat respuestaChat = new RespuestaChat();
             if (chat != null)
             {
                 respuestaChat.chatOriginal = chat;
                 respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
-                TempData["usuario"] = UsuarioEnvia;
+                TempData["usuario"] = usuarioLogueado;
                 return View("Chat", respuestaChat);
             }
             else
@@ -160,6 +127,7 @@ namespace WebApplication1.Controllers
                 respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
                 TempData["texto"] = "Error al enviar mensaje.";
                 TempData["color"] = "error";
+                TempData["usuario"] = usuarioLogueado;
                 return View("Chat", respuestaChat);
             }
         }
@@ -196,7 +164,7 @@ namespace WebApplication1.Controllers
             return View("Chat", respuestaChat);
         }
 
-        public IActionResult AgregarArchivos(IFormFile adjunto, string envia, string conversacionId)
+        public IActionResult AgregarArchivos(IFormFile adjunto, string usuarioLogueado, string conversacionId, string tipoMensaje)
         {
             var result = new StringBuilder();
             using (var stream = new MemoryStream())
@@ -210,17 +178,38 @@ namespace WebApplication1.Controllers
 
             char[] listado = result.ToString().ToCharArray();
 
+            LZW lzw = new LZW();
+            char[] respuestaCompresion = lzw.ComprimirArrego(listado);
+            string respuesta = "";
 
-            //LZW lzw = new LZW();
-            //char[] respuestaCompresion = lzw.ComprimirArrego(listado);
-            //ProcesosAuxilares procesos = new ProcesosAuxilares();
+            foreach (var item in respuestaCompresion)
+            {
+                respuesta += item + "~";
+            }
 
-
-
-
-            //procesos.ActualizarMenajse(envia, respuesta, conversacionId);
+            ProcesosAuxilares procesos = new ProcesosAuxilares();
+            procesos.ActualizarMenajse(usuarioLogueado, respuesta, conversacionId, tipoMensaje);
 
             return Ok();
+        }
+
+        public IActionResult DescargarArchivo(string archivo)
+        {
+            LZW lzw = new LZW();
+
+            string[] listadoPalabras = archivo.Split("~");
+            char[] listadoCaracteres = new char[listadoPalabras.Length - 1];
+            for (int i = 0; i < listadoCaracteres.Length - 1; i++)
+            {
+                if (listadoPalabras[i] != "")
+                {
+                    listadoCaracteres[i] = Convert.ToChar(listadoCaracteres[i]);
+                }
+            }
+
+            //char[] respuestaDescompresion = lzw.DescomprimirArreglo(listadoCaracteres);
+
+            return File(Encoding.UTF8.GetBytes("Texto descomprimido"),"text/plain", "archivo.txt");
         }
 
     }

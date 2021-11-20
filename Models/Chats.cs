@@ -24,5 +24,6 @@ namespace WebApplication1.Models
         public string Usuario { get; set; }
         public string Mensaje { get; set; }
         public string Fecha { get; set; }
+        public string tipo { get; set; }
     }
 }
