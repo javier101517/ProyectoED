@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApplication1.Axiliares;
 using WebApplication1.Clases.Cifrado;
+using WebApplication1.Clases.Compresion;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -197,27 +198,25 @@ namespace WebApplication1.Controllers
 
         public IActionResult AgregarArchivos(IFormFile adjunto, string envia, string conversacionId)
         {
-            //var result = new StringBuilder();
-            //using (var stream = new MemoryStream())
-            //{
-            //    using (var reader = new StreamReader(adjunto.OpenReadStream()))
-            //    {
-            //        while (reader.Peek() >= 0)
-            //            result.AppendLine(reader.ReadLine());
-            //    }
-            //}
+            var result = new StringBuilder();
+            using (var stream = new MemoryStream())
+            {
+                using (var reader = new StreamReader(adjunto.OpenReadStream()))
+                {
+                    while (reader.Peek() >= 0)
+                        result.AppendLine(reader.ReadLine());
+                }
+            }
 
-            //char[] listado = result.ToString().ToCharArray();
+            char[] listado = result.ToString().ToCharArray();
 
-            //LZWAuxiliar lzw = new LZWAuxiliar();
-            //RespuestaLZW respuesta = lzw.Compresion(letras);
+
+            //LZW lzw = new LZW();
+            //char[] respuestaCompresion = lzw.ComprimirArrego(listado);
             //ProcesosAuxilares procesos = new ProcesosAuxilares();
 
-            //string diccionarioExtendido = respuesta.DiccionarioExtendido.ToArray().ToString();
 
 
-            //SDES sdes = new SDES();
-            //List<byte> listado = sdes.Cifrar(listado);
 
             //procesos.ActualizarMenajse(envia, respuesta, conversacionId);
 
