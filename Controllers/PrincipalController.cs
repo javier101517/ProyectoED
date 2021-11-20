@@ -209,7 +209,7 @@ namespace WebApplication1.Controllers
 
             char[] respuestaDescompresion = lzw.DescomprimirArreglo(listadoCaracteres);
 
-            return File(Encoding.UTF8.GetBytes("Texto descomprimido"),"text/plain", "archivo.txt");
+            return File(Encoding.UTF8.GetBytes(respuestaDescompresion),"text/plain", "archivo.txt");
         }
 
     }
