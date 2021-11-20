@@ -38,10 +38,10 @@ namespace WebApplication1.Clases.Cifrado
             return claveComun;
         }
 
-        public int GenerarLlaveSecreta(int claveComun)
+        public int GenerarLlaveSecreta(int claveComun, int secretNumber)
         {
             int llaveSecreta = 0;
-            var integer = BigInteger.ModPow(generator, secretNumber, primeNumber);
+            var integer = BigInteger.ModPow(claveComun, secretNumber, primeNumber);
             foreach (var bytes in integer.ToByteArray())
             {
                 if (bytes != 0)
