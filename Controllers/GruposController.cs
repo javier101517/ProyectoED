@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,16 @@ namespace WebApplication1.Controllers
             Mongo mongo = new Mongo();
 
             Usuario usuarioLog = mongo.GetUsuario(usuarioLogueado);
-
-            return View(usuarioLogueado);
+            return View("Index", usuarioLog);
         }
 
-        public IActionResult CrearCrupo(string[] integrantes, string usuarioLogueado, string nombreGrupo)
+        [HttpPost]
+        public IActionResult CrearGrupo(string[] integrantes, string usuarioLogueado, string nombreGrupo)
         {
+            //string[] integrantes = collection["integrantes"];
+            //string usuarioLogueado = collection["usuarioLogueado"];
+            //string nombreGrupo = collection["nombreGrupo"];
+
             if (integrantes.Length <= 1)
             {
                 TempData["texto"] = "2 participantes minimo para crear un grupo";
