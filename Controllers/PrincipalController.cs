@@ -1,5 +1,4 @@
-﻿using Cifrado.Clases;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -91,7 +90,7 @@ namespace WebApplication1.Controllers
             ProcesosAuxilares procesos = new ProcesosAuxilares();
 
             SDES sdes = new SDES();
-            char[] respuestaDelCifrado = sdes.CifrarArreglo(listadoMensaje);
+            char[] respuestaDelCifrado = sdes. CifrarArreglo(625, listadoMensaje);
             string mensajeCifrado = "";
             foreach (var item in respuestaDelCifrado)
             {
@@ -174,9 +173,28 @@ namespace WebApplication1.Controllers
             }
 
             ProcesosAuxilares procesos = new ProcesosAuxilares();
-            procesos.ActualizarMenajse(usuarioLogueado, respuesta, conversacionId, tipoMensaje);
+            Chats chat = procesos.ActualizarMenajse(usuarioLogueado, respuesta, conversacionId, tipoMensaje);
 
-            return Ok();
+
+            RespuestaChat respuestaChat = new RespuestaChat();
+            if (chat != null)
+            {
+                respuestaChat.chatOriginal = chat;
+                respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
+                TempData["usuario"] = usuarioLogueado;
+                return View("Chat", respuestaChat);
+            }
+            else
+            {
+                respuestaChat.chatOriginal = chat;
+                respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
+                TempData["texto"] = "Error al enviar mensaje.";
+                TempData["color"] = "error";
+                TempData["usuario"] = usuarioLogueado;
+                return View("Chat", respuestaChat);
+            }
+
+            //return Ok();
         }
 
         public IActionResult DescargarArchivo(string archivo)
