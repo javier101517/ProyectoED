@@ -13,8 +13,8 @@ namespace WebApplication1.Models
     {
         private MongoClient Conexion()
         {
-            //var cliente = new MongoClient("mongodb://url:4vT5CLqbsb*$-SF@cluster0-shard-00-00.ezs44.mongodb.net:27017,cluster0-shard-00-01.ezs44.mongodb.net:27017,cluster0-shard-00-02.ezs44.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-fm2ttf-shard-0&authSource=admin&retryWrites=true&w=majority");
-            var cliente = new MongoClient("mongodb://localhost:27017");
+            var cliente = new MongoClient("mongodb://url:4vT5CLqbsb*$-SF@cluster0-shard-00-00.ezs44.mongodb.net:27017,cluster0-shard-00-01.ezs44.mongodb.net:27017,cluster0-shard-00-02.ezs44.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-fm2ttf-shard-0&authSource=admin&retryWrites=true&w=majority");
+            //var cliente = new MongoClient("mongodb://localhost:27017");
             return cliente;
         }
 
