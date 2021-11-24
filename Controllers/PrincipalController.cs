@@ -221,7 +221,7 @@ namespace WebApplication1.Controllers
 
             return File(Encoding.UTF8.GetBytes(respuestaFinal),"text/plain", "archivo.txt");
 
-            //return File(Encoding.UTF8.GetBytes(respuestaDescompresion),"text/plain", "archivo.txt"); ;
+            //return File(Encoding.UTF8.GetBytes(respuestaDescompresion),"text/plain", "archivo.txt");
         }
 
     }
