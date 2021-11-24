@@ -6,7 +6,7 @@ using System.IO;
 
 namespace WebApplication1.Clases.Compresion
 {
-    public class LZW
+    public class LZW : ICompresion
     {
         Dictionary<string, int> Diccionario { get; set; }
 

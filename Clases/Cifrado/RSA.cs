@@ -8,7 +8,7 @@ using System.Numerics;
 
 namespace WebApplication1.Clases.Cifrado
 {
-    public class RSA
+    public class RSA : ICifrado
     {
         private int[] llavePublica { get; set; }
 
@@ -31,6 +31,12 @@ namespace WebApplication1.Clases.Cifrado
 
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // GENERACIÓN DE LLAVE
+
+        public void DefinirLlave(int _n, int _e, int _d)
+        {
+            this.llavePrivada = new int[] { _n, _d };
+            this.llavePublica = new int[] { _n, _e };
+        }
 
         public void GenerarLlave(int _p, int _q)
         {
@@ -139,14 +145,14 @@ namespace WebApplication1.Clases.Cifrado
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CIFRADO
 
-        public List<byte> Cifrar(int n, int e)
+        public List<byte> Cifrar()
         {
             List<byte> listaByteCifrado = new List<byte>();
 
             List<int> listaCharArchivo = LecturaArchivoOrigin();
             foreach (var _Byte in listaCharArchivo)
             {
-                var byteCifrado = BigInteger.ModPow(_Byte, e, n);
+                var byteCifrado = BigInteger.ModPow(_Byte, llavePrivada[1], llavePrivada[0]);
                 foreach (var bytes in byteCifrado.ToByteArray())
                 {
                     listaByteCifrado.Add(bytes);
@@ -209,7 +215,7 @@ namespace WebApplication1.Clases.Cifrado
             return ListaASCII;
         }
 
-        public void CrearArchivoCifrado(int n, int e)
+        public void CrearArchivoCifrado()
         {
             if (File.Exists(cipherFile.FullName))
             {
@@ -217,7 +223,7 @@ namespace WebApplication1.Clases.Cifrado
             }
 
             //File.Create(PathFileHUFF);
-            List<byte> _FileCompress = Cifrar(n, e);
+            List<byte> _FileCompress = Cifrar();
             FileStream stream = new FileStream(cipherFile.FullName, FileMode.Create, FileAccess.Write);
             BinaryWriter writer = new BinaryWriter(stream);
 
@@ -235,14 +241,14 @@ namespace WebApplication1.Clases.Cifrado
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DESCIFRADO
 
-        public List<byte> Descifrar(int n, int d)
+        public List<byte> Descifrar()
         {
             List<byte> listaByteDescifrado = new List<byte>();
 
             List<int> listaCharArchivo = LecturaArchivoCipher();
             foreach (var _Byte in listaCharArchivo)
             {
-                var byteDescifrado = BigInteger.ModPow(_Byte, d, n);
+                var byteDescifrado = BigInteger.ModPow(_Byte, llavePublica[1], llavePublica[0]);
                 foreach (var bytes in byteDescifrado.ToByteArray())
                 {
                     listaByteDescifrado.Add(bytes);
@@ -315,7 +321,7 @@ namespace WebApplication1.Clases.Cifrado
             return ListaASCII;
         }
 
-        public void CrearArchivoDescifrado(int n, int d)
+        public void CrearArchivoDescifrado()
         {
 
             if (File.Exists(originalFile.FullName))
@@ -323,7 +329,7 @@ namespace WebApplication1.Clases.Cifrado
                 File.Delete(originalFile.FullName);
             }
 
-            List<byte> _FileDecipher = Descifrar(n, d);
+            List<byte> _FileDecipher = Descifrar();
             FileStream stream = new FileStream(originalFile.FullName, FileMode.Create, FileAccess.Write);
             BinaryWriter writer = new BinaryWriter(stream);
 

@@ -112,7 +112,7 @@ namespace WebApplication1.Axiliares
                     }
                 }
 
-                char[] listadoDescifrado = sdes.DescifrarArreglo(listadoFinal);
+                char[] listadoDescifrado = sdes.DescifrarArreglo(625, listadoFinal);
                 string mensajeDescifrado = "";
 
                 foreach (var item2 in listadoDescifrado)

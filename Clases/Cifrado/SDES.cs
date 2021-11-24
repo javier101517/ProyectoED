@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using Cifrado.Clases;
+using WebApplication1.Clases.Cifrado;
 
 namespace WebApplication1.Clases.Cifrado
 {
-    public class SDES
+    public class SDES : ICifrado
     {
         private string llaveSecreta { get; set; }
 
@@ -98,6 +98,15 @@ namespace WebApplication1.Clases.Cifrado
             return new string(arregloLS);
         }
 
+        private void GenerarLlaves()
+        {
+            string llave = P10(llaveSecreta);
+            llave = LS_1(llave.Substring(0, 5)) + LS_1(llave.Substring(5, 5));
+            K1 = P8(llave);
+            llave = LS_2(llave.Substring(0, 5)) + LS_2(llave.Substring(5, 5));
+            K2 = P8(llave);
+        }
+
         public void ObtenerLlave(string _llave)
         {
             this.llaveSecreta = _llave;
@@ -105,13 +114,13 @@ namespace WebApplication1.Clases.Cifrado
             GenerarLlaves();
         }
 
-        public void GenerarLlaves()
+        public void ObtenerLlave(int _llave)
         {
-            string llave = P10(llaveSecreta);
-            llave = LS_1(llave.Substring(0, 5)) + LS_1(llave.Substring(5, 5));
-            K1 = P8(llave);
-            llave = LS_2(llave.Substring(0, 5)) + LS_2(llave.Substring(5, 5));
-            K2 = P8(llave);
+            string s_llave = Convert.ToString(_llave, 2);
+            s_llave = s_llave.PadLeft(10, '0');
+            this.llaveSecreta = s_llave;
+
+            GenerarLlaves();
         }
 
         // ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -261,9 +270,9 @@ namespace WebApplication1.Clases.Cifrado
             return Convert.ToByte(arreglo, 2);
         }
 
-        public char[] CifrarArreglo(char[] lstContenido)
+        public char[] CifrarArreglo(int i_llave, char[] lstContenido)
         {
-            ObtenerLlave("1001110001");
+            ObtenerLlave(i_llave);
 
             char[] lst = new char[lstContenido.Length];
             lst = lstContenido;
@@ -373,9 +382,9 @@ namespace WebApplication1.Clases.Cifrado
             return listaByteDescifrar;
         }
 
-        public char[] DescifrarArreglo(char[] lstContCifrado)
+        public char[] DescifrarArreglo(int i_llave, char[] lstContCifrado)
         {
-            ObtenerLlave("1001110001");
+            ObtenerLlave(i_llave);
 
             char[] lstOriginal = new char[lstContCifrado.Length];
             int cont = 0;
