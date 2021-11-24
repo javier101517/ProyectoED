@@ -47,7 +47,11 @@ namespace WebApplication1.Controllers
         {
             Mongo mongo = new Mongo();
 
-            mongo.EliminarSolicitud(usuario, invitado);
+            if (mongo.EliminarSolicitud(usuario, invitado))
+            {
+                //mongo.EliminarSolicitud(usuario, invitado);
+                return Json(true);
+            }
             return Json("false");
         }
     
@@ -218,14 +222,7 @@ namespace WebApplication1.Controllers
                 respuestaFinal += item;
             }
 
-<<<<<<< HEAD
             return File(Encoding.UTF8.GetBytes(respuestaFinal),"text/plain", "archivo.txt");
-=======
-
-            return File(Encoding.UTF8.GetBytes(respuestaFinal),"text/plain", "archivo.txt");
-
-            //return File(Encoding.UTF8.GetBytes(respuestaDescompresion),"text/plain", "archivo.txt"); ;
->>>>>>> bdf66181fac70ba0acc4007e2549abb0bcd9e276
         }
 
     }
