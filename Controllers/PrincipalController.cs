@@ -47,7 +47,11 @@ namespace WebApplication1.Controllers
         {
             Mongo mongo = new Mongo();
 
-            mongo.EliminarSolicitud(usuario, invitado);
+            if (mongo.EliminarSolicitud(usuario, invitado))
+            {
+                //mongo.EliminarSolicitud(usuario, invitado);
+                return Json(true);
+            }
             return Json("false");
         }
     
