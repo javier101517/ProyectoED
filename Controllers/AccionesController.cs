@@ -17,52 +17,62 @@ namespace WebApplication1.Controllers
         {
             string correoAgregar = collection["correo"];
             string usuarioLogueado = collection["id"];
-            RespuestaPantallaPrincipal respuestaPantallaPrincipal = new RespuestaPantallaPrincipal();
-            Mongo mongo = new Mongo();
-            Usuario miUsuario = mongo.GetUsuario(usuarioLogueado);
-            List<string> contactos = new List<string>(miUsuario.Contactos);
-            List<Chats> listadoChats = mongo.GetChats(usuarioLogueado);
-            respuestaPantallaPrincipal.Historial = listadoChats;
-            respuestaPantallaPrincipal.UsuarioLogueado = miUsuario;
-            
-            if (contactos.Contains(correoAgregar))
-            {
-                TempData["texto"] = "Usuario ya se encuentra agregado en los contactos.";
-                TempData["Color"] = "error";
-                return RedirectToAction("Index", "Principal", new { usuarioLogueado = usuarioLogueado } );
-            }
-            
-            Usuario usuario2 = mongo.GetUsuario(correoAgregar);
-            List<string> contactosUsuario2 = new List<string>(usuario2.Solicitudes);
-            if (contactosUsuario2.Contains(usuarioLogueado))
-            {
-                TempData["texto"] = "La invitacion ya fue enviada, se espera la confirmacion.";
-                TempData["Color"] = "error";
-                return RedirectToAction("Index", "Principal", new { usuarioLogueado = usuarioLogueado });
-            }
 
-            Usuario usuarioAgregar = mongo.GetUsuario(correoAgregar);
-            if (usuarioAgregar == null)
+            if (correoAgregar != usuarioLogueado)
             {
-                TempData["texto"] = "Usuario no existe, por favor verifique.";
-                TempData["Color"] = "error";
-                return RedirectToAction("Index", "Principal", new { usuarioLogueado = usuarioLogueado });
-            }
-                
-            List<string> usuarioAgregarSolicitudes = new List<string>(usuarioAgregar.Solicitudes);
-            if (usuarioAgregarSolicitudes.Contains(usuarioLogueado))
-            {
-                TempData["texto"] = "Invitación ya fue enviada.";
+                RespuestaPantallaPrincipal respuestaPantallaPrincipal = new RespuestaPantallaPrincipal();
+                Mongo mongo = new Mongo();
+                Usuario miUsuario = mongo.GetUsuario(usuarioLogueado);
+                List<string> contactos = new List<string>(miUsuario.Contactos);
+                List<Chats> listadoChats = mongo.GetChats(usuarioLogueado);
+                respuestaPantallaPrincipal.Historial = listadoChats;
+                respuestaPantallaPrincipal.UsuarioLogueado = miUsuario;
+
+                if (contactos.Contains(correoAgregar))
+                {
+                    TempData["texto"] = "Usuario ya se encuentra agregado en los contactos.";
+                    TempData["Color"] = "error";
+                    return RedirectToAction("Index", "Principal", new { usuarioLogueado = usuarioLogueado });
+                }
+
+                Usuario usuario2 = mongo.GetUsuario(correoAgregar);
+                List<string> contactosUsuario2 = new List<string>(usuario2.Solicitudes);
+                if (contactosUsuario2.Contains(usuarioLogueado))
+                {
+                    TempData["texto"] = "La invitacion ya fue enviada, se espera la confirmacion.";
+                    TempData["Color"] = "error";
+                    return RedirectToAction("Index", "Principal", new { usuarioLogueado = usuarioLogueado });
+                }
+
+                Usuario usuarioAgregar = mongo.GetUsuario(correoAgregar);
+                if (usuarioAgregar == null)
+                {
+                    TempData["texto"] = "Usuario no existe, por favor verifique.";
+                    TempData["Color"] = "error";
+                    return RedirectToAction("Index", "Principal", new { usuarioLogueado = usuarioLogueado });
+                }
+
+                List<string> usuarioAgregarSolicitudes = new List<string>(usuarioAgregar.Solicitudes);
+                if (usuarioAgregarSolicitudes.Contains(usuarioLogueado))
+                {
+                    TempData["texto"] = "Invitación ya fue enviada.";
+                    TempData["Color"] = "success";
+                    return RedirectToAction("Index", "Principal", new { usuarioLogueado = usuarioLogueado });
+                }
+
+                usuarioAgregarSolicitudes.Add(usuarioLogueado);
+                mongo.ActualizarSolicitudes(correoAgregar, usuarioAgregarSolicitudes.ToArray());
+
+                TempData["texto"] = "Invitación enviada.";
                 TempData["Color"] = "success";
                 return RedirectToAction("Index", "Principal", new { usuarioLogueado = usuarioLogueado });
             }
-
-            usuarioAgregarSolicitudes.Add(usuarioLogueado);
-            mongo.ActualizarSolicitudes(correoAgregar, usuarioAgregarSolicitudes.ToArray());
-
-            TempData["texto"] = "Invitación enviada.";
-            TempData["Color"] = "success";
-            return RedirectToAction("Index", "Principal", new { usuarioLogueado = usuarioLogueado });
+            else
+            {
+                TempData["texto"] = "No puedes enviar invitación a tu usuario, por favor coloca otra";
+                TempData["Color"] = "error";
+                return RedirectToAction("Index", "Principal", new { usuarioLogueado = usuarioLogueado });
+            }
         }
 
         public bool AceptarSolicitud(string usuario, string invitado)

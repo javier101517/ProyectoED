@@ -148,7 +148,7 @@ namespace WebApplication1.Axiliares
             usuario.Grupos = listadoGrupos.ToArray();
             mongo.ActualizarUsuarioConGrupo(usuario);
         }
-    
-    
+
+
     }
 }
