@@ -20,6 +20,19 @@
             }
         </div>
 
+        <div>
+            if (TempData["usuario"].ToString() == Model.chatOriginal.Usuario1)
+            {
+                <a asp-controller="Principal" asp-action="ActualizarChat" asp-route-usuarioEnvia="@TempData["usuario"].ToString()" asp-route-usuarioRecive="@Model.chatOriginal.Usuario2" class="text-decoration-none btn btn-warning">
+                    Actualizar Chat
+                </a>
+            }else
+            {
+                <a asp-controller="Principal" asp-action="ActualizarChat" asp-route-usuarioEnvia="@TempData["usuario"].ToString()" asp-route-usuarioRecive="@Model.chatOriginal.Usuario1" class="text-decoration-none btn btn-warning">
+                    Actualizar Chat
+                </a>
+            }
+        </div>
     </div>
 
     <div class="position-relative" style="height: 580px; overflow-y: scroll">

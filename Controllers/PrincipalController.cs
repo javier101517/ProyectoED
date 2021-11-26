@@ -279,6 +279,7 @@ namespace WebApplication1.Controllers
 
 
             return File(Encoding.UTF8.GetBytes(respuestaFinal), "text/plain", "archivo.txt");
+        }
 
         public IActionResult EliminarChatMi(string posicionChat, string idChat, string usuarioLogueado)
         {
@@ -314,6 +315,12 @@ namespace WebApplication1.Controllers
             respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
             TempData["usuario"] = usuarioLogueado;
             return View("Chat", respuestaChat);
+        }
+
+        public IActionResult ActualizarChat(string usuarioEnvia, string UsuarioRecibe)
+        {
+            string usuarios = usuarioEnvia + "," + UsuarioRecibe;
+            return RedirectToAction("Index", usuarios);
         }
     }
 }
