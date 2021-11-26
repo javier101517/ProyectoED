@@ -12,6 +12,8 @@ namespace WebApplication1.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        public string LlavePrivada { get; set; }
+        public string LlavePublica { get; set; }
         public string UsuarioCreador { get; set; }
         public string NombreGrupo { get; set; }
         public Integrante[] Integrantes { get; set; }
