@@ -10,9 +10,9 @@ namespace WebApplication1.Clases.Cifrado
 {
     public class RSA : ICifrado
     {
-        private int[] llavePublica { get; set; }
+        public int[] llavePublica { get; set; }
 
-        private int[] llavePrivada { get; set; }
+        public int[] llavePrivada { get; set; }
 
         private FileInfo originalFile { get; set; }
 

@@ -14,6 +14,7 @@ namespace WebApplication1.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
+        public string Llave { get; set; }
         public string Nombre { get; set; }
         public string Correo { get; set; }
         public string Password { get; set; }
