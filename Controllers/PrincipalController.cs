@@ -225,11 +225,43 @@ namespace WebApplication1.Controllers
             //return Ok();
         }
 
-        public IActionResult DescargarArchivo(string archivo)
+        //public IActionResult DescargarArchivo(string archivo)
+        //{
+        //    LZW lzw = new LZW();
+
+        //    string[] listadoPalabras = archivo.Split("~");
+        //    char[] listadoCaracteres = new char[listadoPalabras.Length - 1];
+        //    for (int i = 0; i < listadoCaracteres.Length - 1; i++)
+        //    {
+        //        if (listadoPalabras[i] != "")
+        //        {
+        //            listadoCaracteres[i] = Convert.ToChar(listadoPalabras[i]);
+        //        }
+        //    }
+
+        //    char[] respuestaDescompresion = lzw.DescomprimirArreglo(listadoCaracteres);
+        //    string respuestaFinal = "";
+        //    foreach (var item in respuestaDescompresion)
+        //    {
+        //        respuestaFinal += item;
+        //    }
+
+
+        //    return File(Encoding.UTF8.GetBytes(respuestaFinal),"text/plain", "archivo.txt");
+
+        //    //return File(Encoding.UTF8.GetBytes(respuestaDescompresion),"text/plain", "archivo.txt");
+        //}
+
+        public IActionResult DescargarArchivo(string ConversacionId, int archivo)
         {
             LZW lzw = new LZW();
 
-            string[] listadoPalabras = archivo.Split("~");
+            Mongo mongo = new Mongo();
+            Chats chat = mongo.GetChat(ConversacionId);
+
+            string mensaje = chat.Historial[archivo].Mensaje;
+
+            string[] listadoPalabras = mensaje.Split("~");
             char[] listadoCaracteres = new char[listadoPalabras.Length - 1];
             for (int i = 0; i < listadoCaracteres.Length - 1; i++)
             {
@@ -247,10 +279,9 @@ namespace WebApplication1.Controllers
             }
 
 
-            return File(Encoding.UTF8.GetBytes(respuestaFinal),"text/plain", "archivo.txt");
+            return File(Encoding.UTF8.GetBytes(respuestaFinal), "text/plain", "archivo.txt");
 
             //return File(Encoding.UTF8.GetBytes(respuestaDescompresion),"text/plain", "archivo.txt");
         }
-
     }
 }
