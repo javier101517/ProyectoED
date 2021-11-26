@@ -27,6 +27,15 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+
+        public IActionResult LogOut(string usuarioLogueado)
+        {
+            Mongo mongo = new Mongo();
+            mongo.ActualizarEstadoDeLogout(usuarioLogueado);
+
+            return RedirectToAction("Index");
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -46,13 +55,30 @@ namespace WebApplication1.Controllers
 
             Mongo mongo = new Mongo();
             Usuario UsuarioLogueado = mongo.Login(usuario, password);
-            if (UsuarioLogueado != null)
-            {
 
-                return RedirectToAction("Index", "Principal", new { usuarioLogueado = UsuarioLogueado.Correo });
+           
+
+            if (UsuarioLogueado != null )
+            {
+                if (UsuarioLogueado.Estado == "1")
+                {
+                    TempData["texto"] = "Usuario ya se encuentra logueado";
+                    TempData["color"] = "error";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    mongo.ActualizarEstadoDeLogin(UsuarioLogueado.Correo);
+                    return RedirectToAction("Index", "Principal", new { usuarioLogueado = UsuarioLogueado.Correo });
+
+                }
+
             }
             else
             {
+
+
+
                 TempData["texto"] = "Usuario o contraseña incorrectos";
                 TempData["color"] = "error";
                 return RedirectToAction("Index");

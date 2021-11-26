@@ -21,6 +21,7 @@ namespace WebApplication1.Models
         public string[] Contactos { get; set; }
         public string[] Solicitudes { get; set; }
         public DescripcionGrupo[] Grupos { get; set; }
+        public string Estado { get; set; }
     }
         
 }
