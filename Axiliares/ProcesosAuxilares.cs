@@ -9,7 +9,7 @@ namespace WebApplication1.Axiliares
 {
     public class ProcesosAuxilares
     {
-        public Chats ActualizarMenajse(string UsuarioEnvia, string Mensaje, string ConversacionId, string tipoMensaje)
+        public Chats ActualizarMenajse(string UsuarioEnvia, string Mensaje, string ConversacionId, string tipoMensaje, string claveCifrada)
         {
             try
             {
@@ -23,6 +23,7 @@ namespace WebApplication1.Axiliares
 
                 Mongo mongo = new Mongo();
                 Chats chat = mongo.GetChat(ConversacionId);
+                chat.Clave = claveCifrada;
                 List<Conversacion> historial = new List<Conversacion>(chat.Historial);
                 historial.Add(nuevoMensaje);
 
@@ -114,7 +115,14 @@ namespace WebApplication1.Axiliares
                     }
                 }
 
-                char[] listadoDescifrado = sdes.DescifrarArreglo(625, listadoFinal);
+                char[] arregloDes = sdes.DescifrarArreglo(625, chatOriginal.Clave.ToCharArray());
+                string clavedescifrada = string.Empty;
+                foreach (var caracter in arregloDes)
+                {
+                    clavedescifrada += caracter.ToString();
+                }
+                int i_clave = Convert.ToInt32(clavedescifrada);
+                char[] listadoDescifrado = sdes.DescifrarArreglo(i_clave, listadoFinal);
                 string mensajeDescifrado = "";
 
                 foreach (var item2 in listadoDescifrado)

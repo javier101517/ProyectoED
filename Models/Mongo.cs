@@ -250,7 +250,8 @@ namespace WebApplication1.Models
                 var coleccion = database.GetCollection<Chats>("Chats");
 
                 var filtro = Builders<Chats>.Filter.Eq("Id", chat.Id);
-                var update = Builders<Chats>.Update.Set("MensajesNuevosUsuario1", chat.MensajesNuevosUsuario1)
+                var update = Builders<Chats>.Update.Set("Clave", chat.Clave)
+                    .Set("MensajesNuevosUsuario1", chat.MensajesNuevosUsuario1)
                     .Set("MensajesNuevosUsuario2", chat.MensajesNuevosUsuario2)
                     .Set("Historial", chat.Historial);
                 var respuesta = coleccion.UpdateOne(filtro, update);
