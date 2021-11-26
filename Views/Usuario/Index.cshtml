@@ -1,0 +1,50 @@
+﻿@model IEnumerable<WebApplication1.Models.Usuario>
+
+<div class="container mt-4">
+    @using (Html.BeginForm("AgregarUsuario", "Acciones"))
+    {
+        @Html.AntiForgeryToken();
+        <div class="d-flex flex-row justify-content-between mb-5">
+            <div class="d-flex flex-row">
+                <div>
+                    <a class="text-decoration-none" asp-controller="Principal" asp-action="Index" asp-route-usuarioLogueado="@TempData["usuarioLogueado"].ToString()" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="ml-3">
+                    <h3 class="modal-title" id="exampleModalLabel">Agregar usuario</h3>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Enviar Invitación</button>
+            </div>
+        </div>
+
+        <input type="text" value="@TempData["usuarioLogueado"].ToString()" name="id" hidden />
+
+        <select class='mi-selector' id="correo" name='correos[]' multiple="multiple">
+            @foreach (var item in Model)
+            {
+                <option value='@item.Id'>@item.Correo</option>
+            }
+        </select>
+    }
+</div>
+
+@if (TempData["texto"] != null)
+{
+    <script>
+            alertify.notify('@TempData["texto"].ToString()', '@TempData["color"].ToString()', 5);
+    </script>
+}
+
+<script>
+    jQuery(document).ready(function ($) {
+        $(document).ready(function () {
+            $('.mi-selector').select2();
+        });
+    });
+</script>

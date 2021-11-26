@@ -53,3 +53,10 @@
         }
     </div>
 </div>
+
+@if (TempData["texto"] != null)
+{
+    <script>
+            alertify.notify('@TempData["texto"].ToString()', '@TempData["color"].ToString()', 5);
+    </script>
+}

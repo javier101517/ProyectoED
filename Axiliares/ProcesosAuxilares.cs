@@ -19,6 +19,7 @@ namespace WebApplication1.Axiliares
                 nuevoMensaje.Mensaje = Mensaje;
                 nuevoMensaje.Usuario = UsuarioEnvia;
                 nuevoMensaje.tipo = tipoMensaje;
+                nuevoMensaje.Estado = "0";
 
                 Mongo mongo = new Mongo();
                 Chats chat = mongo.GetChat(ConversacionId);
@@ -60,6 +61,7 @@ namespace WebApplication1.Axiliares
                 nuevoMensaje.Mensaje = Mensaje;
                 nuevoMensaje.Usuario = UsuarioEnvia;
                 nuevoMensaje.tipo = tipoMensaje;
+                nuevoMensaje.Estado = "0";
 
                 Mongo mongo = new Mongo();
                 Grupo grupo = mongo.GetGrupo(ConversacionId);
@@ -125,6 +127,7 @@ namespace WebApplication1.Axiliares
                 ConversacionDescifrada.Mensaje = mensajeDescifrado;
                 ConversacionDescifrada.Usuario = item.Usuario;
                 ConversacionDescifrada.tipo = item.tipo;
+                ConversacionDescifrada.Estado = item.Estado;
 
                 nuevoHistorial.Add(ConversacionDescifrada);
             }

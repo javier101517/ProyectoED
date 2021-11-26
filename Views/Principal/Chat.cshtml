@@ -1,12 +1,25 @@
 ﻿@model WebApplication1.Models.RespuestaChat
 
 <div class="container">
-    <div class="mt-2 mb-2">
-        <a asp-controller="Principal" asp-action="Index" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
-            </svg>
-        </a>
+    <div class="mt-2 mb-2 d-flex flex-row">
+        <div>
+            <a asp-controller="Principal" asp-action="Index" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="ml-3">
+            @if (TempData["usuario"].ToString() == Model.chatOriginal.Usuario1)
+            {
+                <h2>@Model.chatOriginal.Usuario2</h2>
+            }else
+            {
+                <h2>@Model.chatOriginal.Usuario1</h2>
+            }
+        </div>
+
     </div>
 
     <div class="position-relative" style="height: 580px; overflow-y: scroll">
@@ -14,25 +27,77 @@
         <ul class="list-group mb-2 h-75">
             @if (Model.conversacionesDescifradas != null)
             {
-                for (int i = 0; i < @Model.conversacionesDescifradas.Count; i++)
+                @for (int i = 0; i < @Model.conversacionesDescifradas.Count; i++)
                 {
-                    if (@TempData["usuario"].ToString() == Model.conversacionesDescifradas[i].Usuario)
+                    @if (TempData["usuario"].ToString() == Model.conversacionesDescifradas[i].Usuario)
                     {
-                        if (Model.conversacionesDescifradas[i].tipo == "file")
+                        @if (Model.conversacionesDescifradas[i].tipo == "file")
                         {
                             <li class="list-group-item list-group-item-success mb-1">
-                                <a asp-controller="Principal" asp-action="DescargarArchivo" asp-route-archivo="@Model.chatOriginal.Historial[i].Mensaje" class="text-decoration-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-arrow-down" viewBox="0 0 16 16">
-                                        <path d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z" />
-                                        <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
-                                    </svg>
-                                </a>
+                                <div>
+                                    @if (Model.conversacionesDescifradas[i].Estado == "0")
+                                    { 
+                                        <a asp-controller="Principal" asp-action="DescargarArchivo" asp-route-archivo="@Model.chatOriginal.Historial[i].Mensaje" class="text-decoration-none">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-arrow-down" viewBox="0 0 16 16">
+                                                <path d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z" />
+                                                <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+                                            </svg>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <p>Mensaje Eliminado</p>
+                                    }
+                                </div>
+                                <div>
+                                    @if (Model.conversacionesDescifradas[i].Estado == "0")
+                                    {
+                                        <div class="dropdown">
+                                            <button class="btn list-group-item-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a asp-controller="Principal" asp-action="EliminarChatMi" asp-route-posicionChat="@i" asp-route-idChat="@Model.chatOriginal.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                                    Eliminar para mi
+                                                </a>
+                                                <a asp-controller="Principal" asp-action="EliminarChatTodos" asp-route-posicionChat="@i" asp-route-idChat="@Model.chatOriginal.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                                    Eliminar para todos
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
                             </li>
                         }
                         else
                         {
-                            <li class="list-group-item list-group-item-success mb-1">
-                                @Model.conversacionesDescifradas[i].Mensaje
+                            <li class="list-group-item list-group-item-success mb-1 d-flex flex-row justify-content-between">
+                                <div>
+                                    @if (Model.conversacionesDescifradas[i].Estado == "0")
+                                    { 
+                                        @Model.conversacionesDescifradas[i].Mensaje
+                                    }
+                                    else
+                                    {
+                                        <p>Mensaje eliminado</p>
+                                    }
+                                </div>
+                                <div>
+                                    @if (Model.conversacionesDescifradas[i].Estado == "0")
+                                    {
+                                        <div class="dropdown">
+                                            <button class="btn list-group-item-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a asp-controller="Principal" asp-action="EliminarChatMi" asp-route-posicionChat="@i" asp-route-idChat="@Model.chatOriginal.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                                    Eliminar para mi
+                                                </a>
+                                                <a asp-controller="Principal" asp-action="EliminarChatTodos" asp-route-posicionChat="@i" asp-route-idChat="@Model.chatOriginal.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                                    Eliminar para todos
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
                             </li>
                         }
                     }
@@ -40,27 +105,54 @@
                     {
                         @if (Model.conversacionesDescifradas[i].tipo == "file")
                         {
-                            <li class="list-group-item list-group-item-secondary mb-1">
-                                <a asp-controller="Principal" asp-action="Index" asp-route-archivo="@Model.chatOriginal.Historial[i].Mensaje" class="text-decoration-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-arrow-down" viewBox="0 0 16 16">
-                                        <path d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z" />
-                                        <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
-                                    </svg>
-                                </a>
+                            <li class="list-group-item list-group-item-secondary mb-1 d-flex flex-row justify-content-between">
+                                <div>
+                                    @if (Model.conversacionesDescifradas[i].Estado == "2")
+                                    {
+                                        <p>Mensaje Eliminado</p>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Principal" asp-action="Index" asp-route-archivo="@Model.chatOriginal.Historial[i].Mensaje" class="text-decoration-none">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-arrow-down" viewBox="0 0 16 16">
+                                                <path d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z" />
+                                                <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+                                            </svg>
+                                        </a>
+                                    }
+
+                                </div>
+                                <div>
+                                    <div class="dropdown">
+                                        <button class="btn list-group-item-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a asp-controller="Principal" asp-action="EliminarChatMi" asp-route-posicionChat="@i" asp-route-idChat="@Model.chatOriginal.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                                Eliminar para mi
+                                            </a>
+                                            <a asp-controller="Principal" asp-action="EliminarChatTodos" asp-route-posicionChat="@i" asp-route-idChat="@Model.chatOriginal.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                                Eliminar para todos
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
                         }
                         else
                         {
                             <li class="list-group-item list-group-item-secondary mb-1">
-                                @Model.conversacionesDescifradas[i].Mensaje
+                                @if (Model.conversacionesDescifradas[i].Estado == "2")
+                                {
+                                    <p>Mensaje eliminado</p>
+                                }else{
+                                    <div>
+                                        @Model.conversacionesDescifradas[i].Mensaje
+                                    </div>
+                                }
                             </li>
                         }
                     }
                 }
-                @*@foreach (var item in Model.conversacionesDescifradas)
-                {
-
-                }*@
             }
         </ul>
     </div>
@@ -76,6 +168,7 @@
                 <input type="text" class="form-control" id="mensjae" name="mensaje">
             </div>
 
+            @*boton de archivos adjuntos*@
             <div class="col-sm-1">
                 <button type="button" class="btn ml-2" data-toggle="modal" data-target="#adjunto">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
@@ -84,6 +177,7 @@
                 </button>
             </div>
 
+            @*boton de enviar mensaje*@
             <div class="col-sm-1">
                 <button type="submit" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
@@ -95,6 +189,7 @@
     }
 </div>
 
+@*modal de archivos adjuntos*@
 <div class="modal fade" id="adjunto" tabindex="-1" role="dialog" aria-labelledby="adjunto" aria-hidden="true">
     <div class="modal-dialog" role="document">
         @using (Html.BeginForm("AgregarArchivos", "Principal", FormMethod.Post, new { enctype = "multipart/form-data" }))

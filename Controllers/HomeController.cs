@@ -66,6 +66,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Registro(IFormCollection collection)
         {
+            Mongo mongo = new();
             string email = collection["email"];
             string usuario = collection["usuario"];
             string password = collection["password"];
@@ -73,29 +74,39 @@ namespace WebApplication1.Controllers
 
             if (usuario == "")
             {
-                TempData["Notificar"] = "Debe ingresar un usuario";
+                TempData["texto"] = "Debe ingresar un usuario";
                 TempData["color"] = "error";
                 return RedirectToAction("Registrarse");
             }
             if (password != password2)
             {
-                TempData["Notificar"] = "Contraseñas diferentes";
+                TempData["texto"] = "Contraseñas diferentes";
                 TempData["color"] = "error";
                 return RedirectToAction("Registrarse");
             }
             if (email == "")
             {
-                TempData["Notificar"] = "Debe ingresar un correo";
+                TempData["texto"] = "Debe ingresar un correo";
                 TempData["color"] = "error";
                 return RedirectToAction("Registrarse");
             }
 
+            Usuario existeUsuario = mongo.GetUsuario(email);
+            if (existeUsuario != null)
+            {
+                TempData["texto"] = "Correo ya se encuentra registrado";
+                TempData["color"] = "error";
+                return RedirectToAction("Registrarse");
+            }
+
+
             Base64 base64 = new();
             string respuesta = base64.Encriptar(password);
 
-            Mongo mongo = new();
             mongo.InsertarUsuario("Usuarios", email, respuesta, usuario);
 
+            TempData["texto"] = "Usuario registrado correctamente";
+            TempData["color"] = "success";
             return RedirectToAction("Index");
         }
     }

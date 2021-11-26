@@ -100,13 +100,27 @@ namespace WebApplication1.Models
             collection.InsertOne(document);
         }
 
-
         public Usuario GetUsuario(string correo)
         {
             var database = Conexion().GetDatabase("ProyectoED");
             var coleccion = database.GetCollection<Usuario>("Usuarios");
             var filtro = Builders<Usuario>.Filter.Eq("Correo", correo);
             var respuesta = coleccion.Find(filtro).FirstOrDefault();
+
+            if (respuesta == null)
+            {
+                return null;
+            }
+            else
+            {
+                return respuesta;
+            }
+        }
+        public List<Usuario> GetUsuarios()
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Usuario>("Usuarios");
+            var respuesta = coleccion.Find(_ => true).ToList();
 
             if (respuesta == null)
             {

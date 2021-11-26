@@ -27,5 +27,6 @@ namespace WebApplication1.Models
         public string Mensaje { get; set; }
         public string Fecha { get; set; }
         public string tipo { get; set; }
+        public string Estado { get; set; }
     }
 }

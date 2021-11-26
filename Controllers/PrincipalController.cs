@@ -49,10 +49,12 @@ namespace WebApplication1.Controllers
 
             if (mongo.EliminarSolicitud(usuario, invitado))
             {
-                //mongo.EliminarSolicitud(usuario, invitado);
                 return Json(true);
             }
-            return Json("false");
+            else
+            {
+                return Json(false);
+            }
         }
     
         public IActionResult Chat(string id, string usuarioLogueado)
@@ -90,7 +92,6 @@ namespace WebApplication1.Controllers
             string TipoMensaje = collection["tipoMensaje"];
 
             char[] listadoMensaje = Mensaje.ToCharArray();
-
             ProcesosAuxilares procesos = new ProcesosAuxilares();
 
             SDES sdes = new SDES();
@@ -225,5 +226,40 @@ namespace WebApplication1.Controllers
             return File(Encoding.UTF8.GetBytes(respuestaFinal),"text/plain", "archivo.txt");
         }
 
+        public IActionResult EliminarChatMi(string posicionChat, string idChat, string usuarioLogueado)
+        {
+            Mongo mongo = new Mongo();
+            Chats chat = mongo.GetChat(idChat);
+            List<Conversacion> ListadoConversacion = chat.Historial.ToList();
+            Conversacion conversacion = ListadoConversacion[int.Parse(posicionChat)];
+            conversacion.Estado = "1";
+
+            mongo.ActualizarConversacion(chat);
+
+            RespuestaChat respuestaChat = new RespuestaChat();
+            ProcesosAuxilares procesos = new ProcesosAuxilares();
+            respuestaChat.chatOriginal = chat;
+            respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
+            TempData["usuario"] = usuarioLogueado;
+            return View("Chat", respuestaChat);
+        }
+
+        public IActionResult EliminarChatTodos(string posicionChat, string idChat, string usuarioLogueado)
+        {
+            Mongo mongo = new Mongo();
+            Chats chat = mongo.GetChat(idChat);
+            List<Conversacion> ListadoConversacion = chat.Historial.ToList();
+            Conversacion conversacion = ListadoConversacion[int.Parse(posicionChat)];
+            conversacion.Estado = "2";
+
+            mongo.ActualizarConversacion(chat);
+
+            RespuestaChat respuestaChat = new RespuestaChat();
+            ProcesosAuxilares procesos = new ProcesosAuxilares();
+            respuestaChat.chatOriginal = chat;
+            respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
+            TempData["usuario"] = usuarioLogueado;
+            return View("Chat", respuestaChat);
+        }
     }
 }
