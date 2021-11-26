@@ -136,5 +136,10 @@ namespace WebApplication1.Controllers
 
             return Ok();
         }
+
+        public IActionResult ActualizarChat(string usuarioLogueado)
+        {
+            return RedirectToAction("Index", usuarioLogueado);
+        }
     }
 }
