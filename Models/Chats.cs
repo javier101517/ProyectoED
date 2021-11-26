@@ -22,7 +22,7 @@ namespace WebApplication1.Models
 
     public class Conversacion
     {
-        //public string Id { get; set; }
+        public string Id { get; set; }
         public string Usuario { get; set; }
         public string Mensaje { get; set; }
         public string Fecha { get; set; }

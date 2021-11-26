@@ -92,8 +92,38 @@ namespace WebApplication1.Controllers
 
             char[] listadoMensaje = Mensaje.ToCharArray();
 
+            Mongo mongo = new Mongo();
+            Grupo grupoTemp = mongo.GetGrupo(ConversacionId);
+
+            RSA rsa = new RSA();
+            SDES sDes = new SDES();
+
+            List<int> lstLlave = new List<int>();
+            string llavePrivCifrada = grupoTemp.LlavePrivada;
+            string llavePrivDescifrada = string.Empty;
+            string[] split = llavePrivCifrada.Split(',');
+            foreach (var item in split)
+            {
+                string temp = item.ToString();
+                char[] arreglo = temp.ToCharArray();
+                arreglo = sDes.DescifrarArreglo(625, arreglo);
+                foreach (var caracter in arreglo)
+                {
+                    llavePrivDescifrada += caracter;
+                }
+                lstLlave.Add(Convert.ToInt32(llavePrivDescifrada));
+                llavePrivDescifrada = string.Empty;
+            }
+
+
+            string respuesta = string.Empty;
+            foreach (var caracter in listadoMensaje)
+            {
+                respuesta += caracter;
+            }
+
             ProcesosAuxilares procesos = new ProcesosAuxilares();
-            Grupo grupo = procesos.ActualizarMensajeGrupo(usuarioLogueado, Mensaje, ConversacionId, TipoMensaje);
+            Grupo grupo = procesos.ActualizarMensajeGrupo(usuarioLogueado, Mensaje, ConversacionId, TipoMensaje, lstLlave);
             RespuestaChat respuestaChat = new RespuestaChat();
             if (grupo != null)
             {
@@ -115,24 +145,50 @@ namespace WebApplication1.Controllers
 
         public IActionResult AgregarArchivos(IFormFile adjunto, string usuarioLogueado, string conversacionId, string tipoMensaje)
         {
-            //var result = new StringBuilder();
-            //using (var stream = new MemoryStream())
-            //{
-            //    using (var reader = new StreamReader(adjunto.OpenReadStream()))
-            //    {
-            //        while (reader.Peek() >= 0)
-            //            result.AppendLine(reader.ReadLine());
-            //    }
-            //}
+            var result = new StringBuilder();
+            using (var stream = new MemoryStream())
+            {
+                using (var reader = new StreamReader(adjunto.OpenReadStream()))
+                {
+                    while (reader.Peek() >= 0)
+                        result.AppendLine(reader.ReadLine());
+                }
+            }
 
-            //char[] listado = result.ToString().ToCharArray();
+            char[] listado = result.ToString().ToCharArray();
 
-            
+            Mongo mongo = new Mongo();
+            Grupo grupoTemp = mongo.GetGrupo(conversacionId);
 
-            
+            RSA rsa = new RSA();
+            SDES sDes = new SDES();
 
-           
-            //procesos.ActualizarMenajse(usuarioLogueado, respuesta, conversacionId, tipoMensaje);
+            List<int> lstLlave = new List<int>();
+            string llavePrivCifrada = grupoTemp.LlavePrivada;
+            string llavePrivDescifrada = string.Empty;
+            string[] split = llavePrivCifrada.Split(',');
+            foreach (var item in split)
+            {
+                string temp = item.ToString();
+                char[] arreglo = temp.ToCharArray();
+                arreglo = sDes.DescifrarArreglo(625, arreglo);
+                foreach (var caracter in arreglo)
+                {
+                    llavePrivDescifrada += caracter;
+                }
+                lstLlave.Add(Convert.ToInt32(llavePrivDescifrada));
+                llavePrivDescifrada = string.Empty;
+            }
+
+
+            string respuesta = string.Empty;
+            foreach (var caracter in listado)
+            {
+                respuesta += caracter;
+            }
+
+            ProcesosAuxilares procesos = new ProcesosAuxilares();
+            Grupo grupoActualizado = procesos.ActualizarMensajeGrupo(usuarioLogueado, respuesta, conversacionId, tipoMensaje, lstLlave);
 
             return Ok();
         }

@@ -161,7 +161,7 @@
 
 <div class="modal fade" id="adjunto" tabindex="-1" role="dialog" aria-labelledby="adjunto" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        @using (Html.BeginForm("AgregarArchivos", "Principal", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("AgregarArchivos", "Grupo", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken();
             <div class="modal-content">
