@@ -12,7 +12,7 @@ namespace WebApplication1.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        //public int Clave { get; set; }
+        public string Clave { get; set; }
         public string Usuario1 { get; set; }
         public string Usuario2 { get; set; }
         public string MensajesNuevosUsuario1 { get; set; }

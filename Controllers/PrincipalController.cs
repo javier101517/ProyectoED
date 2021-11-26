@@ -43,16 +43,17 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [HttpGet]
         public ActionResult RechazarSolicitud(string usuario, string invitado)
         {
             Mongo mongo = new Mongo();
 
             if (mongo.EliminarSolicitud(usuario, invitado))
             {
-                //mongo.EliminarSolicitud(usuario, invitado);
+                //return RedirectToAction("Index", new { usuarioLogueado = usuario });
                 return Json(true);
             }
-            return Json("false");
+            return Json(false);
         }
     
         public IActionResult Chat(string id, string usuarioLogueado)
@@ -92,16 +93,37 @@ namespace WebApplication1.Controllers
             char[] listadoMensaje = Mensaje.ToCharArray();
 
             ProcesosAuxilares procesos = new ProcesosAuxilares();
-
+            Mongo mongo = new Mongo();
+            Chats chat2 = mongo.GetChat(ConversacionId);
             SDES sdes = new SDES();
-            char[] respuestaDelCifrado = sdes. CifrarArreglo(625, listadoMensaje);
+
+
+            if (chat2.Historial.Length == 0)
+            {
+                Random random = new Random();
+                string clave = Convert.ToString(random.Next(1, 1000));
+                char[] arreglo = sdes.CifrarArreglo(625, clave.ToCharArray());
+                foreach (var caracter in arreglo)
+                {
+                    chat2.Clave += caracter.ToString();
+                }
+            }
+
+            char[] arregloDes = sdes.DescifrarArreglo(625, chat2.Clave.ToCharArray());
+            string clavedescifrada = string.Empty;
+            foreach (var caracter in arregloDes)
+            {
+                clavedescifrada += caracter.ToString();
+            }
+            int i_clave = Convert.ToInt32(clavedescifrada);
+            char[] respuestaDelCifrado = sdes.CifrarArreglo(i_clave, listadoMensaje);
             string mensajeCifrado = "";
             foreach (var item in respuestaDelCifrado)
             {
                 mensajeCifrado += item + "~";
             }
 
-            Chats chat = procesos.ActualizarMenajse(usuarioLogueado, mensajeCifrado, ConversacionId, TipoMensaje);
+            Chats chat = procesos.ActualizarMenajse(usuarioLogueado, mensajeCifrado, ConversacionId, TipoMensaje, chat2.Clave);
             RespuestaChat respuestaChat = new RespuestaChat();
             if (chat != null)
             {
@@ -176,8 +198,10 @@ namespace WebApplication1.Controllers
                 respuesta += item + "~";
             }
 
+            Mongo mongo = new Mongo();
+            Chats chat2 = mongo.GetChat(conversacionId);
             ProcesosAuxilares procesos = new ProcesosAuxilares();
-            Chats chat = procesos.ActualizarMenajse(usuarioLogueado, respuesta, conversacionId, tipoMensaje);
+            Chats chat = procesos.ActualizarMenajse(usuarioLogueado, respuesta, conversacionId, tipoMensaje, chat2.Clave);
 
 
             RespuestaChat respuestaChat = new RespuestaChat();
