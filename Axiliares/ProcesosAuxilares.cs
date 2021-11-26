@@ -52,14 +52,21 @@ namespace WebApplication1.Axiliares
             }
         }
 
-        public Grupo ActualizarMensajeGrupo(string UsuarioEnvia, string Mensaje, string ConversacionId, string tipoMensaje)
+        public Grupo ActualizarMensajeGrupo(string UsuarioEnvia, string Mensaje, string ConversacionId, string tipoMensaje, List<int> lstLlave)
         {
             try
             {
+                RSA rsa = new RSA();
+                string respuesta = string.Empty;
+                foreach (var caracter in Mensaje.ToCharArray())
+                {
+                    respuesta += Convert.ToChar(rsa.CifrarLlave((char)caracter));
+                }
+
                 DateTime fecha = DateTime.Now;
                 Conversacion nuevoMensaje = new Conversacion();
                 nuevoMensaje.Fecha = fecha.ToString();
-                nuevoMensaje.Mensaje = Mensaje;
+                nuevoMensaje.Mensaje = respuesta;
                 nuevoMensaje.Usuario = UsuarioEnvia;
                 nuevoMensaje.tipo = tipoMensaje;
                 nuevoMensaje.Estado = "0";
@@ -67,6 +74,7 @@ namespace WebApplication1.Axiliares
                 Mongo mongo = new Mongo();
                 Grupo grupo = mongo.GetGrupo(ConversacionId);
                 List<Conversacion> historial = new List<Conversacion>(grupo.Historial);
+                nuevoMensaje.Id = Convert.ToString(historial.Count + 1);
                 historial.Add(nuevoMensaje);
 
                 //if (grupo.Historial == UsuarioEnvia)
@@ -85,6 +93,8 @@ namespace WebApplication1.Axiliares
                 //}
                 grupo.Historial = historial.ToArray();
                 mongo.ActualizarHistorialDeGrupo(grupo);
+                nuevoMensaje.Mensaje = Mensaje;
+                grupo.Historial[grupo.Historial.Length - 1] = nuevoMensaje;
                 return grupo;
             }
             catch (Exception)
