@@ -281,8 +281,6 @@ namespace WebApplication1.Controllers
             return File(Encoding.UTF8.GetBytes(respuestaFinal), "text/plain", "archivo.txt");
         }
 
-        }
-
         public IActionResult EliminarChatMi(string posicionChat, string idChat, string usuarioLogueado)
         {
             Mongo mongo = new Mongo();
