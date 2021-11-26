@@ -25,12 +25,12 @@
         <div>
             @if (TempData["usuario"].ToString() == Model.chatOriginal.Usuario1)
             {
-                <a asp-controller="Principal" asp-action="ActualizarChat" asp-route-usuarioEnvia="@TempData["usuario"].ToString()" asp-route-usuarioRecive="@Model.chatOriginal.Usuario2" class="text-decoration-none btn btn-warning">
+                <a asp-controller="Principal" asp-action="ActualizarChat" asp-route-chatId="@Model.chatOriginal.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none btn btn-warning">
                     Actualizar Chat
                 </a>
             }else
             {
-                <a asp-controller="Principal" asp-action="ActualizarChat" asp-route-usuarioEnvia="@TempData["usuario"].ToString()" asp-route-usuarioRecive="@Model.chatOriginal.Usuario1" class="text-decoration-none btn btn-warning">
+                <a asp-controller="Principal" asp-action="ActualizarChat" asp-route-chatId="@Model.chatOriginal.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none btn btn-warning">
                     Actualizar Chat
                 </a>
             }

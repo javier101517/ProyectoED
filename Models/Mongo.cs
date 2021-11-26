@@ -61,7 +61,8 @@ namespace WebApplication1.Models
                 { "Grupos", new BsonArray{ } },
                 { "Password", Password },
                 { "Solicitudes", new BsonArray{ } },
-                { "Nombre", Usuario}
+                { "Nombre", Usuario},
+                { "Estado", "0" }
             };
 
             collection.InsertOne(document);
@@ -242,6 +243,29 @@ namespace WebApplication1.Models
             return respuesta.IsModifiedCountAvailable;
         }
 
+        public bool ActualizarEstadoDeLogin(string correoUsuario)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Usuario>("Usuarios");
+
+            var filtro = Builders<Usuario>.Filter.Eq("Correo", correoUsuario);
+            var update = Builders<Usuario>.Update.Set("Estado", "1");
+            var respuesta = coleccion.UpdateOne(filtro, update);
+
+            return respuesta.IsModifiedCountAvailable;
+        }
+
+        public bool ActualizarEstadoDeLogout(string correoUsuario)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Usuario>("Usuarios");
+
+            var filtro = Builders<Usuario>.Filter.Eq("Correo", correoUsuario);
+            var update = Builders<Usuario>.Update.Set("Estado", "0");
+            var respuesta = coleccion.UpdateOne(filtro, update);
+
+            return respuesta.IsModifiedCountAvailable;
+        }
         public bool ActualizarConversacion(Chats chat)
         {
             try

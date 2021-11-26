@@ -317,10 +317,9 @@ namespace WebApplication1.Controllers
             return View("Chat", respuestaChat);
         }
 
-        public IActionResult ActualizarChat(string usuarioEnvia, string UsuarioRecibe)
+        public IActionResult ActualizarChat(string chatId, string usuarioLogueado)
         {
-            string usuarios = usuarioEnvia + "," + UsuarioRecibe;
-            return RedirectToAction("Index", usuarios);
+            return RedirectToAction("Chat", new { id = chatId, usuarioLogueado = usuarioLogueado });
         }
     }
 }
