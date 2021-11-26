@@ -6,6 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using WebApplication1.Axiliares;
+using WebApplication1.Clases.Cifrado;
 
 namespace WebApplication1.Models
 {
@@ -89,15 +90,59 @@ namespace WebApplication1.Models
             var database = Conexion().GetDatabase("ProyectoED");
             var collection = database.GetCollection<BsonDocument>("Grupos");
 
+            RSA rsa = new RSA();
+            SDES sDes = new SDES();
+            rsa.GenerarLlave(41, 17);
+
+            string llavePrivCifrada = string.Empty;
+            string llavePubCifrada = string.Empty;
+            foreach (var item in rsa.llavePrivada)
+            {
+                string temp = item.ToString();
+                char[] arreglo = temp.ToCharArray();
+                arreglo = sDes.CifrarArreglo(625, arreglo);
+                foreach (var caracter in arreglo)
+                {
+                    llavePrivCifrada += caracter;
+                }
+                llavePrivCifrada += ",";
+            }
+            llavePrivCifrada = llavePrivCifrada.Remove(llavePrivCifrada.Length - 1);
+
+            foreach (var item in rsa.llavePublica)
+            {
+                string temp = item.ToString();
+                char[] arreglo = temp.ToCharArray();
+                arreglo = sDes.CifrarArreglo(625, arreglo);
+                foreach (var caracter in arreglo)
+                {
+                    llavePubCifrada += caracter;
+                }
+                llavePubCifrada += ",";
+            }
+            llavePubCifrada = llavePubCifrada.Remove(llavePubCifrada.Length - 1);
+
+
             var document = new BsonDocument
             {
                 { "NombreGrupo", nombreDelGrupo },
                 { "UsuarioCreador", usuarioCreador },
+                { "LlavePrivada", llavePrivCifrada },
+                { "LlavePublica", llavePubCifrada },
                 { "Integrantes", new BsonArray() },
                 { "Historial", new BsonArray() },
             };
 
             collection.InsertOne(document);
+
+            //Usuario usuario1 = GetUsuario(usuarioCreador);
+            //ActualizarUsuarioConGrupo(usuario1, llavePrivCifrada);
+            //Grupo grupo = GetGrupo(usuarioCreador, nombreDelGrupo);
+            //foreach (var usuario in grupo.Integrantes)
+            //{
+            //    Usuario usuario2 = GetUsuario(usuario.Usuario);
+            //    ActualizarUsuarioConGrupo(usuario2, llavePubCifrada);
+            //}
         }
 
         public Usuario GetUsuario(string correo)
@@ -201,6 +246,19 @@ namespace WebApplication1.Models
 
             var filtro = Builders<Usuario>.Filter.Eq("Correo", usuario.Correo);
             var update = Builders<Usuario>.Update.Set("Grupos", usuario.Grupos);
+            var respuesta = coleccion.UpdateOne(filtro, update);
+
+            return respuesta.IsModifiedCountAvailable;
+        }
+
+        public bool ActualizarUsuarioConGrupo(Usuario usuario, string llave)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Usuario>("Usuarios");
+
+            var filtro = Builders<Usuario>.Filter.Eq("Correo", usuario.Correo);
+            var update = Builders<Usuario>.Update.Set("Grupos", usuario.Grupos)
+                .Set("Llave", llave);
             var respuesta = coleccion.UpdateOne(filtro, update);
 
             return respuesta.IsModifiedCountAvailable;
