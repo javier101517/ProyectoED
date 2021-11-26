@@ -76,9 +76,6 @@ namespace WebApplication1.Controllers
             }
             else
             {
-
-
-
                 TempData["texto"] = "Usuario o contraseña incorrectos";
                 TempData["color"] = "error";
                 return RedirectToAction("Index");

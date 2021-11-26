@@ -22,16 +22,6 @@
             </div>
         </div>
 
-        @*<div>
-            @using (Html.BeginForm("BuscarMensaje", "Principal", FormMethod.Post))
-            { 
-                <input type="text" name="idChat" value="@Model.chatOriginal.Id" hidden/>
-                <input type="text" name="usuarioLogueado" value="@TempData["usuario"].ToString()" hidden/>
-                <input type="text" name="busqueda" />
-                <button type="submit">Buscar</button>
-            }
-        </div>*@
-
         <div>
             @if (TempData["usuario"].ToString() == Model.chatOriginal.Usuario1)
             {

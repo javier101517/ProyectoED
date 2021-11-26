@@ -133,6 +133,16 @@ namespace WebApplication1.Models
             }
         }
 
+        public List<Chats> GetBusquedaPalabras(string palabra, string idConversacion)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Chats>("Chats");
+            var filtro = Builders<Chats>.Filter.ElemMatch(x => x.Historial, x => x.Mensaje == palabra);
+            var respuesta = coleccion.Find(filtro).ToList();
+
+            return respuesta;
+        }
+
         public List<Chats> GetChats(string usuario)
         {
             var database = Conexion().GetDatabase("ProyectoED");

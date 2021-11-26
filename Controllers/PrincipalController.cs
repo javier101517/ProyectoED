@@ -321,5 +321,24 @@ namespace WebApplication1.Controllers
         {
             return RedirectToAction("Chat", new { id = chatId, usuarioLogueado = usuarioLogueado });
         }
+
+        [HttpPost]
+        public IActionResult BuscarMensaje(string busqueda, string idChat, string usuarioLogueado)
+        {
+            Mongo mongo = new Mongo();
+            SDES sdes = new SDES();
+            
+            Chats chat = mongo.GetChat(idChat);
+            char[] arreglo = sdes.CifrarArreglo(625, chat.Clave.ToCharArray());
+            string palabra = "";
+            
+            foreach (var caracter in arreglo)
+            {
+               palabra += caracter.ToString();
+            }
+
+            mongo.GetBusquedaPalabras(palabra, idChat);
+            return Ok();
+        }
     }
 }
