@@ -141,5 +141,18 @@ namespace WebApplication1.Controllers
         {
             return RedirectToAction("Index", usuarioLogueado);
         }
+
+
+        public IActionResult EliminarChatTodos(string posicionChat, string idChat, string usuarioLogueado)
+        {
+            Mongo mongo = new Mongo();
+            Grupo chat = mongo.GetChatGrupales(idChat);
+            List<Conversacion> ListadoConversacion = chat.Historial.ToList();
+            Conversacion conversacion = ListadoConversacion[int.Parse(posicionChat)];
+            conversacion.Estado = "2";
+            mongo.ActualizarConversacionGrupal(chat);
+            TempData["usuario"] = usuarioLogueado;
+            return RedirectToAction("Chat", new { idGrupo =  chat.Id ,usuarioLogueado = usuarioLogueado });
+        }
     }
 }

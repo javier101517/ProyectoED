@@ -25,58 +25,107 @@
     <div class="position-relative" style="height: 580px; overflow-y: scroll">
 
         <ul class="list-group mb-2 h-75">
-            @foreach (var item in Model.Historial)
+            @for (int i = 0; i < Model.Historial.Length; i++)
             {
-                if (@TempData["usuarioLogueado"].ToString() == item.Usuario)
+                if (@TempData["usuarioLogueado"].ToString() == Model.Historial[i].Usuario)
                 {
-                    if (item.tipo == "file")
+
+                    if (Model.Historial[i].tipo == "file")
                     {
-                    <li class="list-group-item list-group-item-success mb-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-arrow-down" viewBox="0 0 16 16">
-                            <path d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z" />
-                            <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
-                        </svg>
-                        @*<a asp-controller="Principal" asp-action="DescargarArchivo" asp-route-archivo="" class="text-decoration-none">
+                        <li class="list-group-item list-group-item-success mb-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-arrow-down" viewBox="0 0 16 16">
                                 <path d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z" />
                                 <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
                             </svg>
-                        </a>*@
-                    </li>
+
+                            @if (Model.Historial[i].Estado == "0")
+                            {
+                                <div class="dropdown">
+                                    <button class="btn list-group-item-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a asp-controller="Grupos" asp-action="EliminarChatTodos" asp-route-posicionChat="@i" asp-route-idChat="@Model.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                            Eliminar para mi
+                                        </a>
+                                        <a asp-controller="Grupos" asp-action="EliminarChatTodos" asp-route-posicionChat="@i" asp-route-idChat="@Model.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                            Eliminar para todos
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </li>
                     }
                     else
                     {
                         <li class="list-group-item list-group-item-success mb-1">
-                            @item.Mensaje
+                            @if (Model.Historial[i].Estado != "0")
+                            {
+                                <p>Mensaje eliminado</p>
+                            }
+                            else
+                            {
+                                @Model.Historial[i].Mensaje <br /> <small>@Model.Historial[i].Usuario</small>
+                                <div class="dropdown">
+                                    <button class="btn list-group-item-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a asp-controller="Grupos" asp-action="EliminarChatTodos" asp-route-posicionChat="@i" asp-route-idChat="@Model.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                            Eliminar para mi
+                                        </a>
+                                        <a asp-controller="Grupos" asp-action="EliminarChatTodos" asp-route-posicionChat="@i" asp-route-idChat="@Model.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                            Eliminar para todos
+                                        </a>
+                                    </div>
+                                </div>
+                            }
                         </li>
                     }
                 }
                 else
                 {
-                    @if(item.tipo == "file")
+                    @if (Model.Historial[i].tipo == "file")
                     {
                         <li class="list-group-item list-group-item-secondary mb-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-arrow-down" viewBox="0 0 16 16">
                                 <path d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z" />
                                 <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
                             </svg>
-                            @*<a asp-controller="Principal" asp-action="Index" asp-route-archivo="@Model.chatOriginal.Historial[i].Mensaje" class="text-decoration-none">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-arrow-down" viewBox="0 0 16 16">
-                                    <path d="M8 5a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5A.5.5 0 0 1 8 5z" />
-                                    <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
-                                </svg>
-                            </a>*@
+                            @if (Model.Historial[i].Estado == "0")
+                            {
+                                <div class="dropdown">
+                                    <button class="btn list-group-item-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a asp-controller="Grupos" asp-action="EliminarChatTodos" asp-route-posicionChat="@i" asp-route-idChat="@Model.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                            Eliminar para mi
+                                        </a>
+                                        <a asp-controller="Grupos" asp-action="EliminarChatTodos" asp-route-posicionChat="@i" asp-route-idChat="@Model.Id" asp-route-usuarioLogueado="@TempData["usuario"].ToString()" class="text-decoration-none dropdown-item">
+                                            Eliminar para todos
+                                        </a>
+                                    </div>
+                                </div>
+                            }
                         </li>
                     }
                     else
                     {
                         <li class="list-group-item list-group-item-secondary mb-1">
-                            @item.Mensaje <br /> <small>@item.Usuario</small>
+                            @if (Model.Historial[i].Estado != "0")
+                            {
+                                <p>Mensaje eliminado</p>
+                            }
+                            else
+                            {
+
+                                @Model.Historial[i].Mensaje <br /> <small>@Model.Historial[i].Usuario</small>
+                            }
+            
                         </li>
-                        
                     }
+
                 }
             }
+
         </ul>
     </div>
 

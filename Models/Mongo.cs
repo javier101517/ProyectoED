@@ -209,6 +209,16 @@ namespace WebApplication1.Models
             return respuesta;
         }
 
+        public Grupo GetChatGrupales(string id)
+        {
+            var database = Conexion().GetDatabase("ProyectoED");
+            var coleccion = database.GetCollection<Grupo>("Grupos");
+            var filtro = Builders<Grupo>.Filter.Eq("Id", id);
+            var respuesta = coleccion.Find(filtro).FirstOrDefault();
+
+            return respuesta;
+        }
+
         public Chats GetChat(string usuarioEnvia, string usuarioRecibe)
         {
             var database = Conexion().GetDatabase("ProyectoED");
@@ -357,6 +367,27 @@ namespace WebApplication1.Models
             }
 
             //cuando actualice se puede agregar un icono de enviado
+
+        }
+
+        public bool ActualizarConversacionGrupal(Grupo chat)
+        {
+            try
+            {
+                var database = Conexion().GetDatabase("ProyectoED");
+                var coleccion = database.GetCollection<Grupo>("Grupos");
+
+                var filtro = Builders<Grupo>.Filter.Eq("Id", chat.Id);
+                var update = Builders<Grupo>.Update.Set("Historial", chat.Historial);
+                var respuesta = coleccion.UpdateOne(filtro, update);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                var test = e.Message;
+                throw;
+            }
 
         }
 

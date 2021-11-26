@@ -299,23 +299,7 @@ namespace WebApplication1.Controllers
             return View("Chat", respuestaChat);
         }
 
-        public IActionResult EliminarChatTodos(string posicionChat, string idChat, string usuarioLogueado)
-        {
-            Mongo mongo = new Mongo();
-            Chats chat = mongo.GetChat(idChat);
-            List<Conversacion> ListadoConversacion = chat.Historial.ToList();
-            Conversacion conversacion = ListadoConversacion[int.Parse(posicionChat)];
-            conversacion.Estado = "2";
-
-            mongo.ActualizarConversacion(chat);
-
-            RespuestaChat respuestaChat = new RespuestaChat();
-            ProcesosAuxilares procesos = new ProcesosAuxilares();
-            respuestaChat.chatOriginal = chat;
-            respuestaChat.conversacionesDescifradas = procesos.DescifrarChatParaVista(chat);
-            TempData["usuario"] = usuarioLogueado;
-            return View("Chat", respuestaChat);
-        }
+        
 
         public IActionResult ActualizarChat(string chatId, string usuarioLogueado)
         {
